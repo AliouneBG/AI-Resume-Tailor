@@ -1,0 +1,44 @@
+Senior Backend Engineer — Acme Cloud Solutions
+
+About Acme Cloud Solutions
+Acme Cloud Solutions is a fast-growing SaaS company building the next generation of cloud infrastructure tools. Our platform serves 2,000+ enterprise customers and processes billions of API requests daily.
+
+About the Role
+We are looking for a Senior Backend Engineer to join our Platform team. You will design and build the core services that power our cloud platform, working closely with infrastructure, product, and data teams.
+
+Responsibilities
+- Design, build, and maintain scalable backend services handling high-throughput workloads
+- Lead architecture decisions for our microservices platform
+- Build and optimize data pipelines for real-time analytics and monitoring
+- Implement CI/CD pipelines and improve developer tooling
+- Mentor junior engineers and contribute to engineering best practices
+- Collaborate with product managers to translate requirements into technical solutions
+- Participate in on-call rotation and improve system reliability
+
+Required Qualifications
+- 4+ years of experience in backend software engineering
+- Strong proficiency in Python and at least one other language (Go, Java, or TypeScript)
+- Experience with microservices architecture and distributed systems
+- Hands-on experience with AWS or GCP cloud services
+- Proficiency with containerization (Docker, Kubernetes)
+- Experience with relational databases (PostgreSQL) and caching (Redis)
+- Strong understanding of CI/CD practices and DevOps principles
+- Excellent problem-solving skills and attention to detail
+
+Nice to Have
+- Experience with event streaming platforms (Kafka, RabbitMQ)
+- Familiarity with Infrastructure-as-Code tools (Terraform, Pulumi)
+- Experience with GraphQL
+- Background in machine learning or data engineering
+- Open-source contributions
+- Experience with observability tools (Datadog, Grafana, Prometheus)
+
+Tech Stack
+Python, Go, PostgreSQL, Redis, Kafka, Docker, Kubernetes, AWS, Terraform, GitHub Actions, Datadog
+
+Benefits
+- Competitive salary ($180K–$220K) + equity
+- Remote-first culture
+- Health, dental, and vision insurance
+- Unlimited PTO
+- $2K annual learning budget

@@ -1,0 +1,33 @@
+# {{ cv.name }}
+{% if cv.email or cv.phone or cv.linkedin or cv.github %}{{ cv.email }}{% if cv.phone %} | {{ cv.phone }}{% endif %}{% if cv.linkedin %} | [LinkedIn]({{ cv.linkedin }}){% endif %}{% if cv.github %} | [GitHub]({{ cv.github }}){% endif %}{% if cv.website %} | [{{ cv.website }}]({{ cv.website }}){% endif %}{% endif %}
+
+## Summary
+{{ summary }}
+
+## Skills
+{{ skills | join(", ") }}
+
+## Experience
+{% for exp in experiences %}
+### {{ exp.role }} — {{ exp.company }}
+*{{ exp.start_date }} – {{ exp.end_date }}*
+{% for bullet in exp.bullets %}
+- {{ bullet }}
+{% endfor %}
+{% endfor %}
+
+## Projects
+{% for proj in projects %}
+### {{ proj.name }}{% if proj.url %} | [{{ proj.url }}]({{ proj.url }}){% endif %}
+
+{% for bullet in proj.bullets %}
+- {{ bullet }}
+{% endfor %}
+{% endfor %}
+
+## Education
+{% for edu in education %}
+### {{ edu.degree }} — {{ edu.institution }}
+*{{ edu.graduation_date }}*{% if edu.gpa %} | GPA: {{ edu.gpa }}{% endif %}
+
+{% endfor %}

@@ -1,0 +1,209 @@
+{
+    "name": "Alex Chen",
+    "email": "alex.chen@email.com",
+    "phone": "555-123-4567",
+    "linkedin": "linkedin.com/in/alexchen",
+    "github": "github.com/alexchen",
+    "website": "alexchen.dev",
+    "summary": "Full-stack software engineer with 4+ years of experience building scalable web applications, data pipelines, and cloud-native services. Passionate about developer experience and system reliability.",
+    "skills": [
+        "Python",
+        "TypeScript",
+        "JavaScript",
+        "React",
+        "Next.js",
+        "Node.js",
+        "FastAPI",
+        "Django",
+        "PostgreSQL",
+        "MongoDB",
+        "Redis",
+        "Docker",
+        "Kubernetes",
+        "AWS",
+        "GCP",
+        "Terraform",
+        "CI/CD",
+        "Git",
+        "REST APIs",
+        "GraphQL",
+        "Kafka",
+        "Celery",
+        "Machine Learning",
+        "PyTorch",
+        "Pandas",
+        "SQL",
+        "Linux",
+        "Agile",
+        "Microservices"
+    ],
+    "experience": [
+        {
+            "id": "exp-1",
+            "role": "Software Engineer II",
+            "company": "TechCorp Inc.",
+            "start_date": "Jan 2023",
+            "end_date": "Present",
+            "bullets": [
+                "Built and deployed 3 microservices handling 50K+ RPM on AWS ECS, reducing API latency by 40%",
+                "Led migration of monolithic Django app to FastAPI microservices, improving deployment frequency from weekly to daily",
+                "Designed real-time data pipeline using Kafka and Celery processing 2M+ events/day for analytics dashboard",
+                "Implemented CI/CD pipelines with GitHub Actions reducing build times by 60% across 12 repositories",
+                "Mentored 2 junior engineers through code reviews and pair programming sessions"
+            ],
+            "technologies": [
+                "Python",
+                "FastAPI",
+                "Django",
+                "AWS",
+                "Docker",
+                "Kubernetes",
+                "Kafka",
+                "Celery",
+                "PostgreSQL",
+                "Redis",
+                "GitHub Actions",
+                "Terraform"
+            ]
+        },
+        {
+            "id": "exp-2",
+            "role": "Full Stack Developer",
+            "company": "StartupXYZ",
+            "start_date": "Jun 2021",
+            "end_date": "Dec 2022",
+            "bullets": [
+                "Developed customer-facing React dashboard serving 10K+ monthly active users with 99.9% uptime",
+                "Shipped GraphQL API layer connecting 5 backend services, reducing frontend API calls by 35%",
+                "Automated deployment workflows using Docker and Terraform, cutting deployment time from 2 hours to 15 minutes",
+                "Built A/B testing framework used by product team to run 20+ experiments per quarter",
+                "Optimized PostgreSQL queries reducing average query time from 800ms to 120ms for reporting endpoints"
+            ],
+            "technologies": [
+                "React",
+                "TypeScript",
+                "Node.js",
+                "GraphQL",
+                "PostgreSQL",
+                "Docker",
+                "Terraform",
+                "AWS",
+                "Next.js",
+                "Redis"
+            ]
+        },
+        {
+            "id": "exp-3",
+            "role": "Software Engineering Intern",
+            "company": "DataFlow Labs",
+            "start_date": "May 2020",
+            "end_date": "Aug 2020",
+            "bullets": [
+                "Developed Python ETL scripts processing 500K+ records daily from multiple data sources",
+                "Built data validation pipeline catching 95% of data quality issues before ingestion",
+                "Created monitoring dashboards in Grafana tracking pipeline health and SLA compliance"
+            ],
+            "technologies": [
+                "Python",
+                "Pandas",
+                "SQL",
+                "PostgreSQL",
+                "Grafana",
+                "Airflow"
+            ]
+        }
+    ],
+    "projects": [
+        {
+            "id": "proj-1",
+            "name": "CloudDeploy — Infrastructure-as-Code Platform",
+            "bullets": [
+                "Built open-source IaC platform enabling one-click deployment to AWS/GCP with Terraform templates",
+                "Implemented user authentication with OAuth2 and RBAC supporting 500+ registered users",
+                "Designed plugin architecture allowing community-contributed deployment templates"
+            ],
+            "technologies": [
+                "Python",
+                "FastAPI",
+                "React",
+                "Terraform",
+                "AWS",
+                "GCP",
+                "Docker",
+                "PostgreSQL"
+            ],
+            "url": "github.com/alexchen/clouddeploy"
+        },
+        {
+            "id": "proj-2",
+            "name": "MLFlow Dashboard — ML Experiment Tracker",
+            "bullets": [
+                "Developed full-stack ML experiment tracking dashboard supporting team of 8 data scientists",
+                "Built REST API with FastAPI serving model metrics, hyperparameters, and artifact storage",
+                "Implemented real-time training progress visualization using WebSocket connections",
+                "Reduced experiment comparison time by 70% with custom diff and visualization tools"
+            ],
+            "technologies": [
+                "Python",
+                "FastAPI",
+                "React",
+                "TypeScript",
+                "PyTorch",
+                "PostgreSQL",
+                "Docker",
+                "WebSocket"
+            ],
+            "url": "github.com/alexchen/mlflow-dash"
+        },
+        {
+            "id": "proj-3",
+            "name": "EventStream — Real-time Event Processing Engine",
+            "bullets": [
+                "Engineered event processing engine handling 100K+ events/second with sub-10ms latency",
+                "Built consumer SDK in Python and TypeScript used by 3 internal teams",
+                "Implemented dead-letter queue and retry mechanisms ensuring 99.99% message delivery"
+            ],
+            "technologies": [
+                "Python",
+                "Kafka",
+                "Redis",
+                "Docker",
+                "Kubernetes",
+                "Grafana"
+            ],
+            "url": "github.com/alexchen/eventstream"
+        },
+        {
+            "id": "proj-4",
+            "name": "DevBot — AI-Powered Code Review Assistant",
+            "bullets": [
+                "Created AI-powered GitHub bot that provides automated code review suggestions",
+                "Integrated with OpenAI API to analyze pull requests and suggest improvements",
+                "Deployed as serverless function on AWS Lambda processing 200+ PRs/week"
+            ],
+            "technologies": [
+                "Python",
+                "Node.js",
+                "AWS Lambda",
+                "OpenAI API",
+                "GitHub API"
+            ],
+            "url": "github.com/alexchen/devbot"
+        }
+    ],
+    "education": [
+        {
+            "degree": "B.S. Computer Science",
+            "institution": "University of California, Berkeley",
+            "graduation_date": "May 2021",
+            "gpa": "3.7",
+            "relevant_courses": [
+                "Distributed Systems",
+                "Database Systems",
+                "Machine Learning",
+                "Software Engineering",
+                "Data Structures and Algorithms"
+            ]
+        }
+    ]
+}
