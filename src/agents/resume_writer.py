@@ -78,11 +78,12 @@ Rewrite EVERY bullet using the STAR framework compressed into 1–2 lines:
 - Use the SAME casing as the JD (e.g., "Kubernetes" not "K8s" if JD says "Kubernetes").
 
 ## ANTI-HALLUCINATION RULES (CRITICAL)
-1. ONLY include technologies, tools, and frameworks present in the Master CV. NEVER invent.
-2. ONLY use metrics/numbers that exist in the Master CV bullets. NEVER fabricate.
-3. If a metric exists (e.g., "50K+ RPM"), you may rephrase it but NEVER change the number.
-4. You may COMBINE two related bullets into one stronger STAR bullet.
-5. You may ADD context verbs (Architected, Spearheaded) but NOT context facts.
+1. NEVER invent new roles, jobs, or companies. Every single piece of Professional Experience MUST exist in the Master CV.
+2. ONLY include technologies, tools, and frameworks present in the Master CV. NEVER invent.
+3. ONLY use metrics/numbers that exist in the Master CV bullets. NEVER fabricate.
+4. If a metric exists (e.g., "50K+ RPM"), you may rephrase it but NEVER change the number.
+5. You may COMBINE two related bullets into one stronger STAR bullet.
+6. You may ADD context verbs (Architected, Spearheaded) but NOT context facts.
 
 ## QUANTIFICATION RULES
 - Preserve ALL numbers from the Master CV (users, RPM, %, time savings, team sizes).
@@ -154,26 +155,49 @@ def generate_resume(
     Returns:
         ATS-optimized Markdown resume string.
     """
-    client = get_llm_client()
+    try:
+        client = get_llm_client()
 
-    # Build a focused user message with clear section headers
-    user_msg = _build_generation_prompt(jd_profile, selection_plan, master_cv)
+        # Build a focused user message with clear section headers
+        user_msg = _build_generation_prompt(jd_profile, selection_plan, master_cv)
 
-    response = client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=[
-            {"role": "system", "content": _SYSTEM_PROMPT},
-            {"role": "user", "content": user_msg},
-        ],
-        temperature=0.25,  # Low temp for consistency, slight creativity for phrasing
-    )
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=[
+                {"role": "system", "content": _SYSTEM_PROMPT},
+                {"role": "user", "content": user_msg},
+            ],
+            temperature=0.25,  # Low temp for consistency, slight creativity for phrasing
+        )
 
-    resume = response.choices[0].message.content.strip()
+        resume = response.choices[0].message.content.strip()
 
-    # Strip any accidental code fences the LLM might wrap the output in
-    resume = _strip_code_fences(resume)
+        # Strip any accidental code fences the LLM might wrap the output in
+        resume = _strip_code_fences(resume)
 
-    return resume
+        return resume
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return f"""\
+# {master_cv.name}
+{master_cv.email} | {master_cv.phone} | {master_cv.linkedin}
+
+## Summary
+*(MOCK DATA)* Highly experienced {jd_profile.target_title} with a proven track record of delivering scalable solutions. Expert in {', '.join(jd_profile.must_have_skills[:3]) if jd_profile.must_have_skills else 'core technologies'}.
+
+## Skills
+**Core:** {', '.join(jd_profile.must_have_skills) if jd_profile.must_have_skills else 'Mocked Skill 1, Mocked Skill 2'}
+**Additional:** {', '.join(jd_profile.nice_to_have_skills) if jd_profile.nice_to_have_skills else 'Mocked Skill 3'}
+
+## Experience
+### Senior Engineer — TechCorp (MOCK)
+* 2020 - Present
+- Built a scalable pipeline using {jd_profile.keywords[0] if jd_profile.keywords else 'technology'}.
+- Addressed key responsibility: {jd_profile.responsibilities[0] if jd_profile.responsibilities else 'Did important things'}. 
+
+> **Developer Note:** This is a mocked fallback resume generated because the LLM API call failed (likely due to an invalid or missing API Key).
+"""
 
 
 def _build_generation_prompt(
@@ -298,6 +322,7 @@ Transform v1 into v2 by addressing EVERY item in the critic's feedback.
 6. **Fix formatting** — Ensure consistent Markdown structure.
 
 ## ANTI-HALLUCINATION (same rules as v1)
+- NEVER invent new roles, jobs, or companies under any circumstances. Every piece of experience MUST come from the Master CV.
 - ONLY technologies, metrics, and facts from the Master CV.
 - If the critic says "missing keyword: Go" but Go is NOT in the Master CV, DO NOT add it.
 - NEVER inflate numbers. "50K+" stays "50K+", not "100K+".
@@ -328,30 +353,35 @@ def improve_resume(
     Returns:
         Improved v2 resume Markdown string.
     """
-    client = get_llm_client()
+    try:
+        client = get_llm_client()
 
-    user_msg = (
-        "Improve this resume based on the critic's feedback. "
-        "Apply STAR method more aggressively and fix all identified issues.\n\n"
-        f"## Current Resume (v1)\n{resume_md}\n\n"
-        f"## Critic's Match Report\n```json\n{match_report_json}\n```\n\n"
-        f"## JD Profile (for keyword reference)\n```json\n{jd_profile.model_dump_json(indent=2)}\n```\n\n"
-        f"## Master CV (ground truth — do NOT add anything not here)\n```json\n{master_cv.model_dump_json(indent=2)}\n```"
-    )
+        user_msg = (
+            "Improve this resume based on the critic's feedback. "
+            "Apply STAR method more aggressively and fix all identified issues.\n\n"
+            f"## Current Resume (v1)\n{resume_md}\n\n"
+            f"## Critic's Match Report\n```json\n{match_report_json}\n```\n\n"
+            f"## JD Profile (for keyword reference)\n```json\n{jd_profile.model_dump_json(indent=2)}\n```\n\n"
+            f"## Master CV (ground truth — do NOT add anything not here)\n```json\n{master_cv.model_dump_json(indent=2)}\n```"
+        )
 
-    response = client.chat.completions.create(
-        model=MODEL_NAME,
-        messages=[
-            {"role": "system", "content": _IMPROVE_SYSTEM_PROMPT},
-            {"role": "user", "content": user_msg},
-        ],
-        temperature=0.2,  # Even lower temp for precise edits
-    )
+        response = client.chat.completions.create(
+            model=MODEL_NAME,
+            messages=[
+                {"role": "system", "content": _IMPROVE_SYSTEM_PROMPT},
+                {"role": "user", "content": user_msg},
+            ],
+            temperature=0.2,  # Even lower temp for precise edits
+        )
 
-    resume = response.choices[0].message.content.strip()
-    resume = _strip_code_fences(resume)
+        resume = response.choices[0].message.content.strip()
+        resume = _strip_code_fences(resume)
 
-    return resume
+        return resume
+    except Exception as e:
+        import traceback
+        traceback.print_exc()
+        return resume_md + "\n\n> **Developer Note:** LLM API call for improvement failed. Returning original resume."
 
 
 # ── Utilities ─────────────────────────────────────────────────

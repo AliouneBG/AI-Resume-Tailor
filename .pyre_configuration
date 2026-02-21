@@ -1,0 +1,9 @@
+{
+  "source_directories": [
+    "."
+  ],
+  "search_path": [
+    ".",
+    "C:\\Users\\Coding Projects\\AppData\\Local\\Programs\\Python\\Python313\\Lib\\site-packages"
+  ]
+}

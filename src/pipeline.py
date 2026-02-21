@@ -87,57 +87,82 @@ def run_pipeline(
     # ── Step 2: Match & Select ────────────────────────────────
     selection_plan = select_content(jd_profile, master_cv)
 
+    # Write output files from Backbone (Step 1-2)
+    out_dir = Path("output")
+    out_dir.mkdir(exist_ok=True)
+    (out_dir / "jd_profile.json").write_text(jd_profile.model_dump_json(indent=2))
+    (out_dir / "selection_plan.json").write_text(selection_plan.model_dump_json(indent=2))
+
     # ── Step 3: Self-Improvement Loop ─────────────────────────
     iterations: list[Iteration] = []
     current_resume: str | None = None
     prev_score: float = 0.0
 
-    for i in range(1, max_iterations + 1):
-        # Generate or improve
-        if i == 1:
-            # First pass: generate from scratch
-            current_resume = generate_resume(jd_profile, selection_plan, master_cv)
-        else:
-            # Subsequent passes: improve based on critic feedback
-            prev_report = iterations[-1].match_report
-            current_resume = improve_resume(
-                jd_profile,
-                master_cv,
-                current_resume,  # type: ignore[arg-type]
-                prev_report.model_dump_json(indent=2),
+    try:
+        for i in range(1, max_iterations + 1):
+            # Generate or improve
+            if i == 1:
+                # First pass: generate from scratch
+                current_resume = generate_resume(jd_profile, selection_plan, master_cv)
+            else:
+                # Subsequent passes: improve based on critic feedback
+                prev_report = iterations[-1].match_report
+                current_resume = improve_resume(
+                    jd_profile,
+                    master_cv,
+                    current_resume,  # type: ignore[arg-type]
+                    prev_report.model_dump_json(indent=2),
+                )
+
+            # Critique the current version
+            report = critique_resume(jd_profile, master_cv, current_resume, iteration=i)
+
+            # Check if this version passes
+            passed = report.score >= pass_threshold
+
+            # Record iteration
+            iteration = Iteration(
+                version=i,
+                resume_md=current_resume,
+                match_report=report,
+                passed=passed,
             )
+            iterations.append(iteration)
 
-        # Critique the current version
-        report = critique_resume(jd_profile, master_cv, current_resume, iteration=i)
+            # Fire callback if provided (for live CLI/UI updates)
+            if on_iteration:
+                on_iteration(iteration)
 
-        # Check if this version passes
-        passed = report.score >= pass_threshold
-
-        # Record iteration
-        iteration = Iteration(
-            version=i,
-            resume_md=current_resume,
-            match_report=report,
-            passed=passed,
-        )
-        iterations.append(iteration)
-
-        # Fire callback if provided (for live CLI/UI updates)
-        if on_iteration:
-            on_iteration(iteration)
-
-        # ── Exit conditions ───────────────────────────────────
-        if passed:
-            # Score meets threshold — we're done!
-            break
-
-        if i > 1:
-            improvement = report.score - prev_score
-            if improvement < min_improvement:
-                # Score converged — further iterations won't help much
+            # ── Exit conditions ───────────────────────────────────
+            if passed:
+                # Score meets threshold — we're done!
                 break
 
-        prev_score = report.score
+            if i > 1:
+                improvement = report.score - prev_score
+                if improvement < min_improvement:
+                    # Score converged — further iterations won't help much
+                    break
+
+            prev_score = report.score
+    except Exception as e:
+        # Gracefully handle generation errors so we at least return the Backbone results
+        if not iterations:
+            from src.models import MatchReport
+            iterations.append(Iteration(
+                version=1,
+                resume_md="Generation failed due to API/system error.",
+                match_report=MatchReport(
+                    keyword_coverage=0.0,
+                    matched_keywords=[],
+                    missing_keywords=[],
+                    evidence_map=[],
+                    risk_flags=["Generation failed."],
+                    score=0.0,
+                    fixes=[]
+                ),
+                passed=False
+            ))
 
     return PipelineResult(
         jd_profile=jd_profile,

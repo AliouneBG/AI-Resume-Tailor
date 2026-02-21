@@ -28,13 +28,23 @@ _METRIC_RE = re.compile(r"\d+[\d,]*\.?\d*\s*[%xX]?")
 
 
 def _normalize(text: str) -> str:
-    """Lowercase + strip for fuzzy matching."""
-    return text.lower().strip()
+    """Lowercase + strip, convert common separators to spaces for fuzzy matching."""
+    return text.lower().strip().replace("/", " ").replace("-", " ")
 
 
 def _text_blob(bullets: list[str], technologies: list[str]) -> str:
     """Combine bullets + tech into a single searchable text blob."""
     return _normalize(" ".join(bullets + technologies))
+
+
+def _token_match(token: str, blob: str) -> bool:
+    """Check if token is present in the blob using word boundaries."""
+    t = _normalize(token)
+    if not t:
+        return False
+    # Use negative lookbehind/lookahead for alphanumeric to avoid substring collision.
+    pattern = r"(?<![a-z0-9])" + re.escape(t) + r"(?![a-z0-9])"
+    return bool(re.search(pattern, blob))
 
 
 def _score_item(
@@ -48,36 +58,37 @@ def _score_item(
 
     # Must-have skills: +3 each
     for skill in jd.must_have_skills:
-        if _normalize(skill) in blob:
+        if _token_match(skill, blob):
             score += 3
             matched.append(skill)
 
     # Nice-to-have skills: +1 each
     for skill in jd.nice_to_have_skills:
-        if _normalize(skill) in blob:
+        if _token_match(skill, blob):
             score += 1
             matched.append(skill)
 
     # Responsibility keywords: +1 each
     for resp in jd.responsibilities:
         for word in _normalize(resp).split():
-            if len(word) > 3 and word in blob:
+            if len(word) > 3 and _token_match(word, blob):
                 score += 1
                 break  # only count once per responsibility
 
     # Keywords: +1 each
     for kw in jd.keywords:
-        if _normalize(kw) in blob:
+        if _token_match(kw, blob):
             score += 1
 
     # Per-bullet bonuses
     for bullet in bullets:
-        lower = _normalize(bullet)
+        lower = bullet.lower().strip()
         # Metric bonus
         if _METRIC_RE.search(bullet):
             score += 1
         # Ownership verb bonus
         first_word = lower.split()[0] if lower.split() else ""
+        first_word = re.sub(r"[^a-z]", "", first_word)
         if first_word in _OWNERSHIP_VERBS:
             score += 1
 

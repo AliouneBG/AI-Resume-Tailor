@@ -1,0 +1,65 @@
+{
+  "selected_experience_ids": [
+    "exp-1",
+    "exp-2"
+  ],
+  "selected_project_ids": [
+    "proj-3",
+    "proj-1",
+    "proj-2"
+  ],
+  "skills_ordered": [
+    "Python",
+    "TypeScript",
+    "PostgreSQL",
+    "Redis",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "GCP",
+    "JavaScript",
+    "React",
+    "Next.js",
+    "Node.js",
+    "FastAPI",
+    "Django",
+    "MongoDB",
+    "Terraform",
+    "CI/CD",
+    "Git",
+    "REST APIs",
+    "GraphQL",
+    "Kafka",
+    "Celery",
+    "Machine Learning",
+    "PyTorch",
+    "Pandas",
+    "SQL",
+    "Linux",
+    "Agile",
+    "Microservices"
+  ],
+  "reasoning": {
+    "matched_skills": [
+      "AWS",
+      "Docker",
+      "GCP",
+      "Kubernetes",
+      "PostgreSQL",
+      "Python",
+      "Redis",
+      "TypeScript"
+    ],
+    "missing_skills": [
+      "4+ years of experience in backend",
+      "Attention to detail",
+      "CI/CD practices",
+      "DevOps principles",
+      "Distributed systems",
+      "Go",
+      "Java",
+      "Microservices architecture",
+      "Problem-solving skills"
+    ]
+  }
+}
