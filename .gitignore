@@ -26,3 +26,6 @@ Thumbs.db
 # Test / cache
 .pytest_cache/
 .mypy_cache/
+
+# SerpAPI cache
+.serpapi_cache/

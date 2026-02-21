@@ -1,0 +1,168 @@
+schema_version: '1'
+fetched_at: '2026-02-21T19:44:26.590460+00:00'
+title: Solutions Engineer II
+company: Disney Entertainment and ESPN Product & Technology
+location: New York, NY
+remote: false
+description: "Technology is at the heart of Disney’s past, present, and future. Disney\
+  \ Entertainment and ESPN Product & Technology is a global organization of engineers,\
+  \ product developers, designers, technologists, data scientists, and more – all\
+  \ working to build and advance the technological backbone for Disney’s media business\
+  \ globally.\n\n\n \n\n\n The team marries technology with creativity to build world-class\
+  \ products, enhance storytelling, and drive velocity, innovation, and scalability\
+  \ for our businesses. We are Storytellers and Innovators. Creators and Builders.\
+  \ Entertainers and Engineers. We work with every part of The Walt Disney Company’s\
+  \ media portfolio to advance the technological foundation and consumer media touch\
+  \ points serving millions of people around the world.\n\n\n \n\n\n Here are a few\
+  \ reasons why we think you’d love working here:\n\n\n  Building the future of Disney’s\
+  \ media: Our Technologists are designing and building the products and platforms\
+  \ that will power our media, advertising, and distribution businesses for years\
+  \ to come. Reach, Scale & Impact: More than ever, Disney’s technology and products\
+  \ serve as a signature doorway for fans' connections with the company’s brands and\
+  \ stories. Disney+. Hulu. ESPN. ABC. ABC News…and many more. These products and\
+  \ brands – and the unmatched stories, storytellers, and events they carry – matter\
+  \ to millions of people globally. Innovation: We develop and implement groundbreaking\
+  \ products and techniques that shape industry norms, and solve complex and distinctive\
+  \ technical problems.\n\n\n \n\n\n Ad Platforms is responsible for Disney’s industry-leading\
+  \ ad technology and products – driving advertising performance, innovation, and\
+  \ value in Disney’s sports, news, and entertainment content, across all media platforms.\n\
+  \n\n The Ad Platforms Technical Operations team is looking for a motivated Data\
+  \ Analytics / Business Intelligence (BI) Solutions Engineer, to be responsible for\
+  \ the day-to-day operations in our Data & BI channel. The ideal candidate will have\
+  \ experience operationalizing advertising data to resolve complex delivery issues\
+  \ and optimize the advertising pipeline. You will need proven leadership skills,\
+  \ a sense of urgency, experience with critical service operations, and the ability\
+  \ to problem-solve in high-volume, production environments. This is an exciting\
+  \ opportunity for a data-enthusiast to join the fast-paced, talented professionals\
+  \ on the Ad Platform team.\n\n\n \n\n\n  Responsibilities\n\n\n \n  Ensure monitoring\
+  \ and alerting on production services are in place, and assist in the resolution\
+  \ of production incidents\n  Triage and troubleshoot operational issues, and provide\
+  \ Tier 2/3 support\n  Deliver on channel-specific key performance metrics (KPM)\
+  \ to track channel health and growth\n  Develop strong partnerships with ad sales,\
+  \ business intelligence, engineering, product management, and analytics leaders\
+  \ to drive focus on strategic and tactical channel objectives\n  Maintain detailed\
+  \ operational documentation for both internal and external consumption\n  Suggest\
+  \ optimization and growth strategies, help manage key development milestones and\
+  \ deployments, and monitor effectiveness\n  Analyze and communicate the impact of\
+  \ key strategy, market, or product changes\n \n  Required Qualifications\n\n\n \n\
+  \  Minimum of 3 years of relevant data analytics, business intelligence, or data\
+  \ science experience – preferably with a digital media or digital advertising company\n\
+  \  Strong SQL experience including writing/optimizing complex queries and using\
+  \ big data technologies (e.g. Snowflake, Hive, Presto, Spark) on medium to large-scale\
+  \ data sets\n  Experience writing and maintaining data pipelines and working with\
+  \ data at scale\n  Expert level knowledge in at least one programming language such\
+  \ as Python, Java, JavaScript\n  Experience with data pipeline and workflow management\
+  \ tools: Apache Airflow\n  Demonstrated experience working with business intelligence\
+  \ tools such as MicroStrategy, Tableau, Databricks, Qlik, etc.\n  Conceptually familiar\
+  \ in data observability and monitoring tools such as Datadog, Grafana, etc.\n  Experience\
+  \ in working with large datasets (Terabytes or more)\n  Experience delivering products\
+  \ in an agile software development environment including sprint work in Jira\n \
+  \ Excellent interpersonal skills with the ability to collaborate and partner across\
+  \ multiple teams and organizations\n  Demonstrated ability to effectively communicate\
+  \ complex concepts to technical and unacquainted audiences\n  Strong presentation\
+  \ and documentation skills including experience working with Confluence, PowerPoint,\
+  \ and LucidChart\n  Strong analytical and critical thinking skills\n  Enjoy working\
+  \ collaboratively with a talented group of people to tackle challenging business\
+  \ problems so we all succeed (or fail fast) as a team\n \n  Preferred Qualifications\n\
+  \n\n \n  Experience with digital advertising systems and ecosystems\n  Experience\
+  \ managing Financial Systems and/or building Financial reports\n  Experience using\
+  \ data analytics to triage and troubleshoot advertising workflows\n  Experience\
+  \ with network topologies, systems architecture overviews, and entity -relationship\
+  \ diagrams (ERD)\n \n  Required Education\n\n\n \n  Bachelor’s degree in Computer\
+  \ Science, Data Analytics or Science, Applied Mathematics, Statistics, related technical\
+  \ fields, or equivalent experience\n \n The hiring range for this position in Santa\
+  \ Monica, CA and Glendale, CA is $106,900 to $143,300 per year and in New York City,\
+  \ NY and Seattle, WA is $112,000 to $150,100. The base pay actually offered will\
+  \ take into account internal equity and also may vary depending on the candidate's\
+  \ geographic region, job-related knowledge, skills, and experience among other factors.\
+  \ A bonus and/or long-term incentive units may be provided as part of the compensation\
+  \ package, in addition to the full range of medical, financial and/or other benefits,\
+  \ dependent on the level and position offered."
+description_source: serpapi
+serpapi_description: "Technology is at the heart of Disney’s past, present, and future.\
+  \ Disney Entertainment and ESPN Product & Technology is a global organization of\
+  \ engineers, product developers, designers, technologists, data scientists, and\
+  \ more – all working to build and advance the technological backbone for Disney’s\
+  \ media business globally.\n\n\n \n\n\n The team marries technology with creativity\
+  \ to build world-class products, enhance storytelling, and drive velocity, innovation,\
+  \ and scalability for our businesses. We are Storytellers and Innovators. Creators\
+  \ and Builders. Entertainers and Engineers. We work with every part of The Walt\
+  \ Disney Company’s media portfolio to advance the technological foundation and consumer\
+  \ media touch points serving millions of people around the world.\n\n\n \n\n\n Here\
+  \ are a few reasons why we think you’d love working here:\n\n\n  Building the future\
+  \ of Disney’s media: Our Technologists are designing and building the products and\
+  \ platforms that will power our media, advertising, and distribution businesses\
+  \ for years to come. Reach, Scale & Impact: More than ever, Disney’s technology\
+  \ and products serve as a signature doorway for fans' connections with the company’s\
+  \ brands and stories. Disney+. Hulu. ESPN. ABC. ABC News…and many more. These products\
+  \ and brands – and the unmatched stories, storytellers, and events they carry –\
+  \ matter to millions of people globally. Innovation: We develop and implement groundbreaking\
+  \ products and techniques that shape industry norms, and solve complex and distinctive\
+  \ technical problems.\n\n\n \n\n\n Ad Platforms is responsible for Disney’s industry-leading\
+  \ ad technology and products – driving advertising performance, innovation, and\
+  \ value in Disney’s sports, news, and entertainment content, across all media platforms.\n\
+  \n\n The Ad Platforms Technical Operations team is looking for a motivated Data\
+  \ Analytics / Business Intelligence (BI) Solutions Engineer, to be responsible for\
+  \ the day-to-day operations in our Data & BI channel. The ideal candidate will have\
+  \ experience operationalizing advertising data to resolve complex delivery issues\
+  \ and optimize the advertising pipeline. You will need proven leadership skills,\
+  \ a sense of urgency, experience with critical service operations, and the ability\
+  \ to problem-solve in high-volume, production environments. This is an exciting\
+  \ opportunity for a data-enthusiast to join the fast-paced, talented professionals\
+  \ on the Ad Platform team.\n\n\n \n\n\n  Responsibilities\n\n\n \n  Ensure monitoring\
+  \ and alerting on production services are in place, and assist in the resolution\
+  \ of production incidents\n  Triage and troubleshoot operational issues, and provide\
+  \ Tier 2/3 support\n  Deliver on channel-specific key performance metrics (KPM)\
+  \ to track channel health and growth\n  Develop strong partnerships with ad sales,\
+  \ business intelligence, engineering, product management, and analytics leaders\
+  \ to drive focus on strategic and tactical channel objectives\n  Maintain detailed\
+  \ operational documentation for both internal and external consumption\n  Suggest\
+  \ optimization and growth strategies, help manage key development milestones and\
+  \ deployments, and monitor effectiveness\n  Analyze and communicate the impact of\
+  \ key strategy, market, or product changes\n \n  Required Qualifications\n\n\n \n\
+  \  Minimum of 3 years of relevant data analytics, business intelligence, or data\
+  \ science experience – preferably with a digital media or digital advertising company\n\
+  \  Strong SQL experience including writing/optimizing complex queries and using\
+  \ big data technologies (e.g. Snowflake, Hive, Presto, Spark) on medium to large-scale\
+  \ data sets\n  Experience writing and maintaining data pipelines and working with\
+  \ data at scale\n  Expert level knowledge in at least one programming language such\
+  \ as Python, Java, JavaScript\n  Experience with data pipeline and workflow management\
+  \ tools: Apache Airflow\n  Demonstrated experience working with business intelligence\
+  \ tools such as MicroStrategy, Tableau, Databricks, Qlik, etc.\n  Conceptually familiar\
+  \ in data observability and monitoring tools such as Datadog, Grafana, etc.\n  Experience\
+  \ in working with large datasets (Terabytes or more)\n  Experience delivering products\
+  \ in an agile software development environment including sprint work in Jira\n \
+  \ Excellent interpersonal skills with the ability to collaborate and partner across\
+  \ multiple teams and organizations\n  Demonstrated ability to effectively communicate\
+  \ complex concepts to technical and unacquainted audiences\n  Strong presentation\
+  \ and documentation skills including experience working with Confluence, PowerPoint,\
+  \ and LucidChart\n  Strong analytical and critical thinking skills\n  Enjoy working\
+  \ collaboratively with a talented group of people to tackle challenging business\
+  \ problems so we all succeed (or fail fast) as a team\n \n  Preferred Qualifications\n\
+  \n\n \n  Experience with digital advertising systems and ecosystems\n  Experience\
+  \ managing Financial Systems and/or building Financial reports\n  Experience using\
+  \ data analytics to triage and troubleshoot advertising workflows\n  Experience\
+  \ with network topologies, systems architecture overviews, and entity -relationship\
+  \ diagrams (ERD)\n \n  Required Education\n\n\n \n  Bachelor’s degree in Computer\
+  \ Science, Data Analytics or Science, Applied Mathematics, Statistics, related technical\
+  \ fields, or equivalent experience\n \n The hiring range for this position in Santa\
+  \ Monica, CA and Glendale, CA is $106,900 to $143,300 per year and in New York City,\
+  \ NY and Seattle, WA is $112,000 to $150,100. The base pay actually offered will\
+  \ take into account internal equity and also may vary depending on the candidate's\
+  \ geographic region, job-related knowledge, skills, and experience among other factors.\
+  \ A bonus and/or long-term incentive units may be provided as part of the compensation\
+  \ package, in addition to the full range of medical, financial and/or other benefits,\
+  \ dependent on the level and position offered."
+source_url: https://www.indeed.com/viewjob?jk=52c19581a75121ea&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+apply_url: https://www.indeed.com/viewjob?jk=52c19581a75121ea&utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+via: Indeed
+posted_at: null
+schedule_type: Full-time
+salary_range: 107K–150K a year
+qualifications: []
+responsibilities: []
+benefits: []
+serpapi_job_id: eyJqb2JfdGl0bGUiOiJTb2x1dGlvbnMgRW5naW5lZXIgSUkiLCJjb21wYW55X25hbWUiOiJEaXNuZXkgRW50ZXJ0YWlubWVudCBhbmQgRVNQTiBQcm9kdWN0IFx1MDAyNiBUZWNobm9sb2d5IiwiaHRpZG9jaWQiOiJhcUMxelVESkt5UHktcHg5QUFBQUFBPT0iLCJmYyI6IkVzd0JDb3dCUVUxdU15MTVWRkZ5ZUhGSGRFMVpaVVZHTFZaWWF6YzRlR0kwUkVOVVRYTk1kMDluTTI5NGQwaHBaM0phTTJaRFJEWk9lamhPTUZJM1UyUk1MV2RVTUdSTllXeHhSRUZPUjJVMFowcEhaalZqYkZod2MwSnBiSEJsZVdZNFVHdDRhQzAwVTNobWEwVTNSREZSZVVSclpqWjVWVVppWm1wT2IwbE1jaTFEYVRoQ2RFVkthWGt3YjFwUWVuUVNGM2xSUTJGaFpIWnhSMHd0ZW0xMGExQTJPSEY0YVVGakdpSkJTa3RNUm0xSmQzVkxOR1J3YjBkeE5uYzBRMGsxYTNSNGRuaHFlazVYV21GQiIsImZjdiI6IjMiLCJmY19pZCI6ImFxQzF6VURKS3lQeS1weDlBQUFBQUE9PSJ9
+full_description_fetched: false
+fetch_error: http_403
+gemini_parsed: false
