@@ -99,12 +99,48 @@ class MatchReport(BaseModel):
     fixes: list[str] = Field(default_factory=list)
 
 
+# ── Iteration (one pass of the self-improvement loop) ─────────
+
+class Iteration(BaseModel):
+    """One cycle of the feedback loop: a resume version + its critic report."""
+    version: int
+    resume_md: str
+    match_report: MatchReport
+    passed: bool = Field(
+        default=False,
+        description="True if this version met the quality threshold.",
+    )
+
+
 # ── Pipeline Result (everything together) ─────────────────────
 
 class PipelineResult(BaseModel):
     jd_profile: JDProfile
     selection_plan: SelectionPlan
-    resume_v1: str
-    match_report_v1: MatchReport
-    resume_v2: str
-    match_report_v2: MatchReport | None = None
+    iterations: list[Iteration] = Field(default_factory=list)
+
+    @property
+    def resume_v1(self) -> str:
+        return self.iterations[0].resume_md if self.iterations else ""
+
+    @property
+    def match_report_v1(self) -> MatchReport | None:
+        return self.iterations[0].match_report if self.iterations else None
+
+    @property
+    def final_resume(self) -> str:
+        return self.iterations[-1].resume_md if self.iterations else ""
+
+    @property
+    def final_report(self) -> MatchReport | None:
+        return self.iterations[-1].match_report if self.iterations else None
+
+    @property
+    def total_iterations(self) -> int:
+        return len(self.iterations)
+
+    @property
+    def score_improvement(self) -> float:
+        if len(self.iterations) < 2:
+            return 0.0
+        return self.iterations[-1].match_report.score - self.iterations[0].match_report.score
