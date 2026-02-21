@@ -1,0 +1,173 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Resume Tailor — Self-Improving Agent</title>
+  <meta name="description" content="AI-powered resume tailor that reads a job description, selects your best content, and self-improves through iterative critique.">
+  <link rel="stylesheet" href="/static/style.css">
+</head>
+<body>
+
+  <!-- ── Header ──────────────────────────────────────────────── -->
+  <header class="site-header">
+    <div class="container">
+      <div class="site-title">Resume Tailor <span>by ADK</span></div>
+      <div class="site-badge">Powered by Gemini</div>
+    </div>
+  </header>
+
+  <main class="container">
+
+    <!-- ── Hero ────────────────────────────────────────────────── -->
+    <section class="hero">
+      <h1>Paste a job description.<br>Get a tailored resume.</h1>
+      <p>Five AI agents read the posting, pick your strongest experiences, write a resume, critique it, and improve it — all in one click.</p>
+    </section>
+
+    <!-- ── How it works (collapsible) ────────────────────────── -->
+    <div class="explainer">
+      <button class="explainer-toggle" id="explainerToggle" aria-expanded="false">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round"><path d="M9 18l6-6-6-6"/></svg>
+        How does it work?
+      </button>
+      <div class="explainer-content" id="explainerContent">
+        <h3>The Pipeline</h3>
+        <div class="pipeline-steps">
+          <div class="pipeline-step-info">
+            <div class="step-number">1</div>
+            <div class="step-label">Extract</div>
+            <div class="step-desc">Reads the JD and pulls out must-have skills, keywords, and requirements</div>
+          </div>
+          <div class="pipeline-step-info">
+            <div class="step-number">2</div>
+            <div class="step-label">Match</div>
+            <div class="step-desc">Scores your CV content against the JD and picks the best experiences</div>
+          </div>
+          <div class="pipeline-step-info">
+            <div class="step-number">3</div>
+            <div class="step-label">Write</div>
+            <div class="step-desc">Generates a STAR-method, ATS-optimized resume using your actual content</div>
+          </div>
+          <div class="pipeline-step-info">
+            <div class="step-number">4</div>
+            <div class="step-label">Critique</div>
+            <div class="step-desc">6-point audit: keyword coverage, hallucination check, STAR compliance</div>
+          </div>
+          <div class="pipeline-step-info">
+            <div class="step-number">5</div>
+            <div class="step-label">Refine</div>
+            <div class="step-desc">Fixes every issue from the critic. Loops until score ≥ 80 or 3 iterations</div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- ── Error Banner ──────────────────────────────────────── -->
+    <div class="error-banner" id="errorBanner"></div>
+
+    <!-- ── JD Input ──────────────────────────────────────────── -->
+    <section class="input-section">
+      <div class="card">
+        <div class="card-header">
+          <span class="card-label">Job Description</span>
+          <button class="btn btn-secondary btn-small" id="loadSampleBtn" title="Load sample JD">
+            Load sample
+          </button>
+        </div>
+        <textarea
+          class="jd-textarea"
+          id="jdInput"
+          placeholder="Paste the full job description here — the more detail, the better the result..."
+          spellcheck="false"
+        ></textarea>
+        <div class="input-actions">
+          <span class="char-count" id="charCount">0 characters</span>
+          <button class="btn btn-primary" id="tailorBtn">
+            Tailor my resume
+          </button>
+        </div>
+      </div>
+    </section>
+
+    <!-- ── Pipeline Progress ─────────────────────────────────── -->
+    <section class="pipeline-section" id="pipelineSection">
+      <div class="pipeline-track">
+        <div class="pipeline-stage" id="stage-extract" data-stage="0">
+          <div class="stage-dot">1</div>
+          <div class="stage-label">Extract</div>
+        </div>
+        <div class="pipeline-stage" id="stage-match" data-stage="1">
+          <div class="stage-dot">2</div>
+          <div class="stage-label">Match</div>
+        </div>
+        <div class="pipeline-stage" id="stage-write" data-stage="2">
+          <div class="stage-dot">3</div>
+          <div class="stage-label">Write</div>
+        </div>
+        <div class="pipeline-stage" id="stage-critique" data-stage="3">
+          <div class="stage-dot">4</div>
+          <div class="stage-label">Critique</div>
+        </div>
+        <div class="pipeline-stage" id="stage-refine" data-stage="4">
+          <div class="stage-dot">5</div>
+          <div class="stage-label">Refine</div>
+        </div>
+      </div>
+      <div class="pipeline-status-text" id="pipelineStatus">Starting pipeline…</div>
+    </section>
+
+    <!-- ── Results ───────────────────────────────────────────── -->
+    <section class="results-section" id="resultsSection">
+      <nav class="results-tabs" role="tablist">
+        <button class="tab-btn active" data-tab="resume" role="tab" aria-selected="true">Resume</button>
+        <button class="tab-btn" data-tab="profile" role="tab">JD Profile</button>
+        <button class="tab-btn" data-tab="plan" role="tab">Match Plan</button>
+        <button class="tab-btn" data-tab="score" role="tab">Score &amp; Critique</button>
+      </nav>
+
+      <!-- Resume tab -->
+      <div class="tab-panel active" id="tab-resume">
+        <div class="resume-actions">
+          <button class="btn btn-secondary btn-small" id="copyBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="9" y="9" width="13" height="13" rx="2"/><path d="M5 15H4a2 2 0 01-2-2V4a2 2 0 012-2h9a2 2 0 012 2v1"/></svg>
+            Copy
+          </button>
+          <button class="btn btn-secondary btn-small" id="downloadBtn">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 15v4a2 2 0 01-2 2H5a2 2 0 01-2-2v-4M7 10l5 5 5-5M12 15V3"/></svg>
+            Download .md
+          </button>
+        </div>
+        <div class="resume-output" id="resumeOutput"></div>
+      </div>
+
+      <!-- JD Profile tab -->
+      <div class="tab-panel" id="tab-profile">
+        <div class="profile-grid" id="profileGrid"></div>
+      </div>
+
+      <!-- Match Plan tab -->
+      <div class="tab-panel" id="tab-plan">
+        <div id="planContent"></div>
+      </div>
+
+      <!-- Score tab -->
+      <div class="tab-panel" id="tab-score">
+        <div id="scoreContent"></div>
+      </div>
+    </section>
+
+  </main>
+
+  <!-- ── Footer ──────────────────────────────────────────────── -->
+  <footer class="site-footer">
+    <div class="container">
+      <p>Built with Google ADK &amp; Gemini &middot; Resume Tailor</p>
+    </div>
+  </footer>
+
+  <!-- Markdown renderer -->
+  <script src="https://cdn.jsdelivr.net/npm/marked@14.0.0/marked.min.js"></script>
+  <script src="/static/app.js"></script>
+</body>
+</html>
