@@ -129,7 +129,7 @@ pytest tests/ -v
 
 ## Key Design Decisions
 
-- **OpenAI SDK** — works with OpenAI, Ollama (free/local), or Groq via `base_url` override
+- **Google Gemini** (`google-genai` SDK) — uses `GEMINI_API_KEY` with `gemini-2.5-flash` by default
 - **Deterministic Matcher** — no LLM, transparent scoring. Judges love explainability.
 - **Anti-hallucination** — Writer + Critic both enforce "only use what's in Master CV"
 - **Pydantic contracts** — every module speaks the same typed language, no ambiguity

@@ -4,26 +4,26 @@
     "exp-2"
   ],
   "selected_project_ids": [
+    "proj-2",
     "proj-3",
-    "proj-1",
-    "proj-2"
+    "proj-1"
   ],
   "skills_ordered": [
     "Python",
     "TypeScript",
-    "PostgreSQL",
-    "Redis",
-    "Docker",
-    "Kubernetes",
-    "AWS",
-    "GCP",
     "JavaScript",
     "React",
     "Next.js",
     "Node.js",
     "FastAPI",
     "Django",
+    "PostgreSQL",
     "MongoDB",
+    "Redis",
+    "Docker",
+    "Kubernetes",
+    "AWS",
+    "GCP",
     "Terraform",
     "CI/CD",
     "Git",
@@ -41,25 +41,19 @@
   ],
   "reasoning": {
     "matched_skills": [
-      "AWS",
-      "Docker",
-      "GCP",
-      "Kubernetes",
-      "PostgreSQL",
-      "Python",
-      "Redis",
-      "TypeScript"
+      "Python"
     ],
     "missing_skills": [
-      "4+ years of experience in backend",
-      "Attention to detail",
-      "CI/CD practices",
-      "DevOps principles",
-      "Distributed systems",
+      "5 years professional experience",
+      "Backend engineer",
+      "Data sets experience",
+      "Developer tools experience",
       "Go",
       "Java",
-      "Microservices architecture",
-      "Problem-solving skills"
+      "Large Language Models experience",
+      "Large-scale systems experience",
+      "Machine learning experience",
+      "Shipped software using LLMs"
     ]
   }
 }

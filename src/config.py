@@ -6,19 +6,19 @@ import os
 from pathlib import Path
 
 from dotenv import load_dotenv
-from openai import OpenAI
+from google import genai
 
 # Load .env from project root
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
 load_dotenv(_PROJECT_ROOT / ".env", override=False)
 
 # ── LLM settings ──────────────────────────────────────────────
-# We will read GEMINI_API_KEY dynamically inside get_llm_client 
+# We will read GEMINI_API_KEY dynamically inside get_llm_client
 # to allow runtime overrides (like from Streamlit).
-# Gemini provides an OpenAI-compatible endpoint
-OPENAI_BASE_URL: str = os.getenv("OPENAI_BASE_URL", "https://generativelanguage.googleapis.com/v1beta/openai/")
 # You can use gemini-2.5-flash or gemini-2.0-flash, standard testing model
-MODEL_NAME: str = os.getenv("MODEL_NAME", "gemini-2.5-flash")
+_model_env = os.getenv("MODEL_NAME", "gemini-2.5-flash")
+# Reject non-Gemini model names (e.g. a stale MODEL_NAME=gpt-4o-mini in .env)
+MODEL_NAME: str = _model_env if _model_env.startswith("gemini") else "gemini-2.5-flash"
 
 # ── Job search settings ──────────────────────────────────────
 SERPAPI_KEY: str = os.getenv("SERPAPI_KEY", "")
@@ -32,13 +32,36 @@ MASTER_CV_PATH = DATA_DIR / "master_cv.json"
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 
 
-def get_llm_client() -> OpenAI:
-    """Return a configured OpenAI client (works with Gemini OpenAI compatibility layer)."""
-    # Allow dynamic override from os.environ (e.g. set by Streamlit UI)
+def get_llm_client() -> genai.Client:
+    """Return a configured Gemini client.
+
+    Auth priority:
+    1. GEMINI_API_KEY env var
+    2. Vertex AI with GCP Application Default Credentials (if GOOGLE_CLOUD_PROJECT is set)
+    3. ADC access token passed directly to the Gemini API
+    """
     api_key = os.environ.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
-    if not api_key:
-        api_key = "missing-key"
-    return OpenAI(
-        api_key=api_key,
-        base_url=OPENAI_BASE_URL,
-    )
+    if api_key:
+        return genai.Client(api_key=api_key)
+
+    # Fall back to GCP Application Default Credentials
+    if GOOGLE_CLOUD_PROJECT:
+        return genai.Client(vertexai=True, project=GOOGLE_CLOUD_PROJECT, location=GOOGLE_CLOUD_LOCATION)
+
+    try:
+        import google.auth
+        import google.auth.transport.requests
+        credentials, _ = google.auth.default(
+            scopes=["https://www.googleapis.com/auth/generative-language"]
+        )
+        credentials.refresh(google.auth.transport.requests.Request())
+        return genai.Client(api_key=credentials.token)
+    except Exception as e:
+        raise RuntimeError(
+            "No Gemini authentication found. Tried in order:\n"
+            "  1. GEMINI_API_KEY environment variable — not set\n"
+            f"  2. Vertex AI via GOOGLE_CLOUD_PROJECT — not set\n"
+            f"  3. GCP Application Default Credentials — failed: {e}\n"
+            "Set GEMINI_API_KEY, or configure GOOGLE_CLOUD_PROJECT and run "
+            "'gcloud auth application-default login'."
+        ) from e

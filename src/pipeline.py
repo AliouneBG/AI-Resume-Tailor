@@ -146,23 +146,7 @@ def run_pipeline(
 
             prev_score = report.score
     except Exception as e:
-        # Gracefully handle generation errors so we at least return the Backbone results
-        if not iterations:
-            from src.models import MatchReport
-            iterations.append(Iteration(
-                version=1,
-                resume_md="Generation failed due to API/system error.",
-                match_report=MatchReport(
-                    keyword_coverage=0.0,
-                    matched_keywords=[],
-                    missing_keywords=[],
-                    evidence_map=[],
-                    risk_flags=["Generation failed."],
-                    score=0.0,
-                    fixes=[]
-                ),
-                passed=False
-            ))
+        raise RuntimeError(f"Pipeline failed on iteration {len(iterations) + 1}: {e}") from e
 
     return PipelineResult(
         jd_profile=jd_profile,

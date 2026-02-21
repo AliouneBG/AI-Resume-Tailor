@@ -40,10 +40,7 @@ cp .env.example .env
 # Edit .env with your API key and model choice
 ```
 
-**Supported providers:**
-- **OpenAI**: Set `OPENAI_API_KEY` (default `gpt-4o-mini`)
-- **Ollama**: Set `OPENAI_BASE_URL=http://localhost:11434/v1` and `MODEL_NAME=llama3`
-- **Groq**: Set `OPENAI_BASE_URL=https://api.groq.com/openai/v1` and your Groq key
+Set `GEMINI_API_KEY` to your Google AI Studio API key. The default model is `gemini-2.5-flash`; override with `MODEL_NAME`.
 
 ### 3. Edit your Master CV
 

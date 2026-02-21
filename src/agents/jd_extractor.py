@@ -5,6 +5,8 @@ from __future__ import annotations
 import json
 import logging
 
+from google.genai import types
+
 from src.config import MODEL_NAME, get_llm_client
 from src.models import JDProfile
 
@@ -93,58 +95,55 @@ def _post_process(data: dict) -> dict:
     
     return data
 
-def _fallback_extract(jd_text: str) -> JDProfile:
-    """Simple regex/heuristic fallback when LLM fails."""
-    lines = [L.strip() for L in jd_text.splitlines() if L.strip()]
-    title = "Unknown Title"
-    for line in lines:
-        if line.lower().startswith("title:"):
-            title = line[6:].strip()
-            break
-            
-    if title == "Unknown Title" and lines:
-        title = lines[0][:50]
-        
-    return JDProfile(
-        target_title=title,
-        must_have_skills=[],
-        nice_to_have_skills=[],
-        responsibilities=[],
-        keywords=[],
-        seniority="unknown"
-    )
+logger = logging.getLogger(__name__)
+
+
+def _is_meaningful(profile: JDProfile) -> bool:
+    """Return True if the profile has at least some useful content."""
+    return bool(profile.responsibilities or profile.must_have_skills or profile.keywords)
+
 
 def extract_jd_profile(jd_text: str) -> JDProfile:
-    """Call the LLM to extract a structured JDProfile from raw JD text."""
+    """Call the LLM to extract a structured JDProfile from raw JD text.
+
+    Raises RuntimeError if both LLM attempts fail or return empty results.
+    """
     client = get_llm_client()
+    last_error: Exception | None = None
 
     def _call(system_prompt: str) -> JDProfile | None:
+        nonlocal last_error
         try:
-            response = client.chat.completions.create(
+            response = client.models.generate_content(
                 model=MODEL_NAME,
-                messages=[
-                    {"role": "system", "content": system_prompt},
-                    {"role": "user", "content": f"Extract the JD profile from this job description:\n\n{jd_text}"},
-                ],
-                temperature=0.1,
-                response_format={"type": "json_object"},
+                contents=f"Extract the JD profile from this job description:\n\n{jd_text}",
+                config=types.GenerateContentConfig(
+                    system_instruction=system_prompt,
+                    temperature=0.1,
+                    response_mime_type="application/json",
+                ),
             )
-            raw = response.choices[0].message.content
+            raw = response.text
             data = json.loads(raw)
             data = _post_process(data)
             return JDProfile(**data)
-        except Exception:
+        except Exception as e:
+            logger.warning("JD extraction attempt failed: %s", e)
+            last_error = e
             return None
 
-    # First attempt
-    profile = _call(_SYSTEM_PROMPT)
-    if profile:
-        return profile
-        
-    # Second attempt (strict prompt)
-    profile = _call(_STRICT_PROMPT)
-    if profile:
-        return profile
-        
-    # Ultimate fallback gracefully
-    return _fallback_extract(jd_text)
+    for prompt in (_SYSTEM_PROMPT, _STRICT_PROMPT):
+        profile = _call(prompt)
+        if profile and _is_meaningful(profile):
+            return profile
+
+    if last_error is not None:
+        raise RuntimeError(
+            f"JD parsing failed after 2 attempts. Last error: {last_error}\n\n"
+            "Check that your API key / credentials are valid and the model is reachable."
+        ) from last_error
+
+    raise RuntimeError(
+        "JD parsing returned no usable data (responsibilities, skills, and keywords are all "
+        "empty). The job description may be too short, paywalled, or in an unsupported format."
+    )

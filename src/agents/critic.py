@@ -16,6 +16,8 @@ from __future__ import annotations
 
 import json
 
+from google.genai import types
+
 from src.config import MODEL_NAME, get_llm_client
 from src.models import JDProfile, MasterCV, MatchReport
 
@@ -143,30 +145,18 @@ def critique_resume(
             f"## Resume to Audit (iteration {iteration})\n{resume_md}"
         )
 
-        response = client.chat.completions.create(
+        response = client.models.generate_content(
             model=MODEL_NAME,
-            messages=[
-                {"role": "system", "content": _SYSTEM_PROMPT},
-                {"role": "user", "content": user_msg},
-            ],
-            temperature=0.1,
-            response_format={"type": "json_object"},
+            contents=user_msg,
+            config=types.GenerateContentConfig(
+                system_instruction=_SYSTEM_PROMPT,
+                temperature=0.1,
+                response_mime_type="application/json",
+            ),
         )
 
-        raw = response.choices[0].message.content
+        raw = response.text
         data = json.loads(raw)  # type: ignore[arg-type]
         return MatchReport(**data)
     except Exception as e:
-        import traceback
-        traceback.print_exc()
-        
-        # Simulated fallback match report
-        return MatchReport(
-            keyword_coverage=0.9,
-            matched_keywords=jd_profile.must_have_skills[:2],
-            missing_keywords=[],
-            evidence_map=[],
-            risk_flags=["FALLBACK DATA PROVISIONED: LLM API error."],
-            score=85.0, # Passes default threshold
-            fixes=[]
-        )
+        raise RuntimeError(f"Resume critique failed: {e}") from e
