@@ -22,6 +22,7 @@ from src.pipeline import (
     load_master_cv,
     run_pipeline,
 )
+from src.job_search import run_search
 
 app = typer.Typer(
     name="resume-tailor",
@@ -203,6 +204,62 @@ def tailor(
         Path(output).write_text(result.final_resume)
         console.print(f"  [green]💾 Saved final resume to {output}[/green]")
         console.print()
+
+
+@app.command()
+def search(
+    query: str = typer.Argument(
+        ...,
+        help='Natural language job search query, e.g. "solutions engineer NYC"',
+    ),
+    output_dir: str = typer.Option(
+        "./jobs",
+        "-o",
+        "--output-dir",
+        help="Output directory for YAML files.",
+    ),
+    max_pages: int = typer.Option(
+        1,
+        "--max-pages",
+        help="SerpAPI pages to fetch, 10 results/page.",
+    ),
+    location: str = typer.Option(
+        "",
+        "--location",
+        help='Location filter, e.g. "New York, NY".',
+    ),
+    no_fetch: bool = typer.Option(
+        False,
+        "--no-fetch",
+        help="Skip page fetching, use SerpAPI snippets only.",
+    ),
+    overwrite: bool = typer.Option(
+        False,
+        "--overwrite",
+        help="Overwrite existing YAML files.",
+    ),
+    verbose: bool = typer.Option(
+        False,
+        "-v",
+        "--verbose",
+        help="Detailed progress output.",
+    ),
+) -> None:
+    """Search for jobs via Google Jobs and output structured YAML files."""
+    console.print()
+    console.rule("[bold cyan]Job Search[/bold cyan]")
+    console.print()
+
+    run_search(
+        query=query,
+        output_dir=Path(output_dir),
+        max_pages=max_pages,
+        location=location,
+        no_fetch=no_fetch,
+        overwrite=overwrite,
+        verbose=verbose,
+        console=console,
+    )
 
 
 if __name__ == "__main__":

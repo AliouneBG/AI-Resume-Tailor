@@ -1,0 +1,240 @@
+schema_version: '1'
+fetched_at: '2026-02-21T19:44:08.100952+00:00'
+title: Senior Solutions Engineer | East Coast - Remote
+company: n8n
+location: Anywhere
+remote: true
+description: "The AI orchestration of your wildest imagination.\n\nn8n is the open\
+  \ workflow orchestration platform built for the new era of AI. We give technical\
+  \ teams the freedom of code with the speed of no-code, so they can automate faster,\
+  \ smarter, and without limits. Backed by a fiercely inventive community and 500+\
+  \ builder-approved integrations, we’re changing the way people bring systems together\
+  \ and scale ideas for impact.\n\n\n\nSince our founding in 2019, we’ve grown into\
+  \ a diverse team of over 160 - working across Europe and the US, connected by a\
+  \ shared builder spirit and with our centre of gravity in Berlin. Along the way,\
+  \ we’ve:\n\n\n\nCultivated a community of more than 650,000 active developers and\
+  \ builders\n\nEarned 145k+ GitHub stars, making us one of the world’s Top 40 most\
+  \ popular projects\n\nBeen ranked as one of Europe’s most promising privately held\
+  \ SaaS startups (4th in Sifted’s 2025 B2B SaaS Rising 100)\n\nRaised $240m to date,\
+  \ from Sequoia’s first German seed to our recent $180m Series C - bringing us to\
+  \ a $2.5bn valuation\n\nAnd are grateful for our 94 eNPS score (most companies would\
+  \ call 70 excellent)\n\n\nThat’s the company we’ve built. Now we’d love to see what\
+  \ you can build. If you’re applying, try n8n out - whether you’re technical or not\
+  \ - and share a screenshot of your first workflow with us. The easiest place to\
+  \ start is here: app.n8n.cloud/register.\n\n\n\nWe’re in a defining moment of an\
+  \ incredible journey. Come and build with us.\n\nAbout the roleAs a Solutions Engineer,\
+  \ you will be the primary technical partner for our Enterprise sales engagements.\
+  \ You’ll work closely with Account Executives to guide prospects through technical\
+  \ discovery, product evaluations, and proofs of concept — helping them validate\
+  \ that n8n can operate securely, reliably, and at scale in their environment.\n\n\
+  This is a customer-facing, hands-on role focused on complex Enterprise use cases.\
+  \ You will spend your time working directly with technical stakeholders, leading\
+  \ technical conversations, and ensuring Enterprise customers clearly understand\
+  \ how n8n fits into their systems and processes.\n\n\n\nWhat You’ll Be DoingLead\
+  \ Enterprise technical discovery, deep-dive calls, and tailored demos, showing how\
+  \ n8n fits into complex customer environments while addressing security, scalability,\
+  \ and reliability requirements\n\nPartner closely with Account Executives to assess\
+  \ technical fit, shape deal strategy, and handle technical objections, delivering\
+  \ demos grounded in real Enterprise workflows and use cases\n\nOwn Enterprise POCs\
+  \ end-to-end, from scoping success criteria to hands-on technical guidance throughout\
+  \ the evaluation\n\nHelp customers validate n8n in real-world conditions and capture\
+  \ POC learnings to improve qualification, conversion, and handoff to Solution Architecture/Customer\
+  \ Success\n\nBuild strong relationships with IT, Security, Platform, and Engineering\
+  \ stakeholders, acting as the primary technical contact during Enterprise evaluations\n\
+  \nClearly explain n8n’s approach to security, deployment, governance, and scale,\
+  \ helping customers plan adoption beyond their first use case\n\nCollaborate with\
+  \ Sales to improve Enterprise technical discovery, demos, and POC frameworks\n\n\
+  Provide structured feedback from Enterprise customers to Product and Engineering,\
+  \ and contribute to enablement materials that strengthen Enterprise sales motions\n\
+  \n\n\nRequirements\n\nMust-have\U0001F4BC Sales Engineering Experience: You have\
+  \ 6+ years of experience in a technical pre-sales or Sales Engineering role, ideally\
+  \ within B2B SaaS, with direct exposure to enterprise customers\n\n\U0001F5E3 Excellent\
+  \ Communication Skills: You can clearly articulate complex technical concepts to\
+  \ both technical and non-technical audiences and confidently engage with enterprise\
+  \ stakeholders\n\n\U0001F310 Commercial Acumen: You understand sales processes and\
+  \ can creatively translate customer requirements into scalable technical solutions\n\
+  \n\U0001F91D Relationship Building: You excel at building and maintaining relationships\
+  \ with clients, particularly within infrastructure teams on deployment requirements\n\
+  \n\U0001F527 Strong Technical Proficiency: You bring hands-on experience with:\n\
+  \nAPI integrations, OAuth, and authentication/authorization concepts\n\nJavaScript\
+  \ and/or Python for scripting, integrations, or demos\n\nContainerization and orchestration\
+  \ concepts (Docker, Kubernetes)\n\nCI/CD and DevOps practices, including integrating\
+  \ applications into CI/CD pipelines\n\nNetworking fundamentals, security best practices,\
+  \ and observability concepts\n\n☁️ Cloud & Infrastructure Awareness: You have a\
+  \ solid understanding of at least one major cloud platform (AWS, GCP, or Azure)\
+  \ and common cloud services used in modern SaaS architectures\n\n\U0001F680 Startup\
+  \ Experience: You thrive in fast-paced, high-ownership startup environments and\
+  \ enjoy wearing multiple hats\n\n✈️ Travel-Ready: You’re open to occasional travel\
+  \ and onboarding sessions with the team in NYC / EMEA as needed\n\n\n\nNice-to-have\U0001F916\
+  \ AI & Automation Experience: Hands-on experience or strong familiarity with AI/LLM\
+  \ platforms, including concepts such as:\n\nLLMs, RAG (Retrieval-Augmented Generation),\
+  \ agents, and orchestration frameworks\n\nIntegrating AI capabilities into workflows\
+  \ or customer-facing solutions\n\nExposure to ML infrastructure or AI-enabled automation\
+  \ platforms\n\n\U0001F393 Advanced Technical Background: You hold a degree in Computer\
+  \ Science, Engineering, or a similar technical training\n\n\U0001F331 Community\
+  \ & Open Source Engagement: You are active in technical communities or have experience\
+  \ contributing to or working with open-source projects\n\n\U0001F6E0 Product Familiarity:\
+  \ Experience with n8n or similar workflow automation, integration, or iPaaS tools\n\
+  \n\U0001F4CA Data-Driven Mindset: You’re comfortable collecting, analyzing, and\
+  \ using data to improve pre-sales processes, POCs, and customer outcomes\n\nn8n\
+  \ is an equal opportunity employer and does not discriminate on the basis of race,\
+  \ religion, colour, national origin, gender, sexual orientation, gender identity,\
+  \ age, marital status, veteran status, or disability status.\n\nWe can sponsor visas\
+  \ to Germany; for any other country, you need to have existing right to work.\n\n\
+  Our company language is English.\n\nYou care about diversity and inclusion? We do\
+  \ too! Check out our Diversity, Inclusion and Belonging initiatives at n8n (https://www.notion.so/n8n/Diversity-inclusion-and-belonging-n8n-c1bec2fff536422d868b1a438d990e35).\n\
+  \nLocation disclaimer: If you see multiple job postings for the same role, it is\
+  \ most likely because we're hiring remotely for this role and posting in different\
+  \ locations to make sure every potential candidate can see the role. Please apply\
+  \ to the location you're the most likely to work from in the future. \n\n\n\nBenefits\
+  \ Competitive compensation \U0001F4B8 – We offer fair and attractive pay.\n\nOwnership\
+  \ \U0001F4AA – Our core value is to “empower others,” and we mean it—you’ll get\
+  \ a slice of n8n with equity.\n\nWork/life balance \U0001F3D6️ – We work hard but\
+  \ ensure you have time to recharge:\n\nEurope: 30 days of vacation, plus public\
+  \ holidays wherever you are.\n\nUS: 15 vacation days, 8 sick days, plus public holidays\
+  \ wherever you are.\n\nHealth & wellness \U0001FA7A –\n\nEurope: We provide benefits\
+  \ according to local country norms.*\n\nUS: Multiple low-premium, low-deductible\
+  \ medical plans with coverage for individuals and families—plus a no-cost premium\
+  \ HDHP option with a pre-seeded HSA—along with dental and vision coverage.\n\nFuture\
+  \ planning \U0001F4B0 –\n\nEurope: We provide pension contributions according to\
+  \ local country norms.*\n\nUS: 401(k) retirement plan with a 4% employer match.\n\
+  \nFinancial security \U0001F6E1️ –\n\nEurope: We provide benefits according to local\
+  \ country norms.*\n\nUS: Company-paid short-term and long-term disability insurance,\
+  \ plus life insurance to support you and your loved ones.\n\nCareer growth \U0001F4C8\
+  \ – We hire rising stars who grow with us! You’ll get €1K (or equivalent) per year\
+  \ to spend on courses, books, events, or coaching to level up your skills.\n\nA\
+  \ passionate team \U0001F929 – We love our product, and we prove it with regular\
+  \ hackathons where we see who can build the coolest thing with it!\n\nRemote-first\
+  \ \U0001F30F – Our team works remotely across Europe, with regular off-sites for\
+  \ team bonding. Some roles, like sales in the US, are hybrid—please check the job\
+  \ description.\n\nGiving back \U0001F91D – We're big fans of open source, and you'll\
+  \ get $100 per month to support projects you care about.\n\nAI enablement \U0001F916\
+  \ – We believe in working smarter—everyone gets an unlimited AI budget to explore\
+  \ and use the best tools to boost productivity and creativity.\n\nTransparency \U0001F64F\
+  \ – We all know what everyone’s working on, how the company is doing—the whole shebang.\n\
+  \nAn ambitious but kind culture \U0001F60D – People love working here—our eNPS for\
+  \ 2024 is 94!\n\n* Country-specific details are provided in your contract."
+description_source: serpapi
+serpapi_description: "The AI orchestration of your wildest imagination.\n\nn8n is\
+  \ the open workflow orchestration platform built for the new era of AI. We give\
+  \ technical teams the freedom of code with the speed of no-code, so they can automate\
+  \ faster, smarter, and without limits. Backed by a fiercely inventive community\
+  \ and 500+ builder-approved integrations, we’re changing the way people bring systems\
+  \ together and scale ideas for impact.\n\n\n\nSince our founding in 2019, we’ve\
+  \ grown into a diverse team of over 160 - working across Europe and the US, connected\
+  \ by a shared builder spirit and with our centre of gravity in Berlin. Along the\
+  \ way, we’ve:\n\n\n\nCultivated a community of more than 650,000 active developers\
+  \ and builders\n\nEarned 145k+ GitHub stars, making us one of the world’s Top 40\
+  \ most popular projects\n\nBeen ranked as one of Europe’s most promising privately\
+  \ held SaaS startups (4th in Sifted’s 2025 B2B SaaS Rising 100)\n\nRaised $240m\
+  \ to date, from Sequoia’s first German seed to our recent $180m Series C - bringing\
+  \ us to a $2.5bn valuation\n\nAnd are grateful for our 94 eNPS score (most companies\
+  \ would call 70 excellent)\n\n\nThat’s the company we’ve built. Now we’d love to\
+  \ see what you can build. If you’re applying, try n8n out - whether you’re technical\
+  \ or not - and share a screenshot of your first workflow with us. The easiest place\
+  \ to start is here: app.n8n.cloud/register.\n\n\n\nWe’re in a defining moment of\
+  \ an incredible journey. Come and build with us.\n\nAbout the roleAs a Solutions\
+  \ Engineer, you will be the primary technical partner for our Enterprise sales engagements.\
+  \ You’ll work closely with Account Executives to guide prospects through technical\
+  \ discovery, product evaluations, and proofs of concept — helping them validate\
+  \ that n8n can operate securely, reliably, and at scale in their environment.\n\n\
+  This is a customer-facing, hands-on role focused on complex Enterprise use cases.\
+  \ You will spend your time working directly with technical stakeholders, leading\
+  \ technical conversations, and ensuring Enterprise customers clearly understand\
+  \ how n8n fits into their systems and processes.\n\n\n\nWhat You’ll Be DoingLead\
+  \ Enterprise technical discovery, deep-dive calls, and tailored demos, showing how\
+  \ n8n fits into complex customer environments while addressing security, scalability,\
+  \ and reliability requirements\n\nPartner closely with Account Executives to assess\
+  \ technical fit, shape deal strategy, and handle technical objections, delivering\
+  \ demos grounded in real Enterprise workflows and use cases\n\nOwn Enterprise POCs\
+  \ end-to-end, from scoping success criteria to hands-on technical guidance throughout\
+  \ the evaluation\n\nHelp customers validate n8n in real-world conditions and capture\
+  \ POC learnings to improve qualification, conversion, and handoff to Solution Architecture/Customer\
+  \ Success\n\nBuild strong relationships with IT, Security, Platform, and Engineering\
+  \ stakeholders, acting as the primary technical contact during Enterprise evaluations\n\
+  \nClearly explain n8n’s approach to security, deployment, governance, and scale,\
+  \ helping customers plan adoption beyond their first use case\n\nCollaborate with\
+  \ Sales to improve Enterprise technical discovery, demos, and POC frameworks\n\n\
+  Provide structured feedback from Enterprise customers to Product and Engineering,\
+  \ and contribute to enablement materials that strengthen Enterprise sales motions\n\
+  \n\n\nRequirements\n\nMust-have\U0001F4BC Sales Engineering Experience: You have\
+  \ 6+ years of experience in a technical pre-sales or Sales Engineering role, ideally\
+  \ within B2B SaaS, with direct exposure to enterprise customers\n\n\U0001F5E3 Excellent\
+  \ Communication Skills: You can clearly articulate complex technical concepts to\
+  \ both technical and non-technical audiences and confidently engage with enterprise\
+  \ stakeholders\n\n\U0001F310 Commercial Acumen: You understand sales processes and\
+  \ can creatively translate customer requirements into scalable technical solutions\n\
+  \n\U0001F91D Relationship Building: You excel at building and maintaining relationships\
+  \ with clients, particularly within infrastructure teams on deployment requirements\n\
+  \n\U0001F527 Strong Technical Proficiency: You bring hands-on experience with:\n\
+  \nAPI integrations, OAuth, and authentication/authorization concepts\n\nJavaScript\
+  \ and/or Python for scripting, integrations, or demos\n\nContainerization and orchestration\
+  \ concepts (Docker, Kubernetes)\n\nCI/CD and DevOps practices, including integrating\
+  \ applications into CI/CD pipelines\n\nNetworking fundamentals, security best practices,\
+  \ and observability concepts\n\n☁️ Cloud & Infrastructure Awareness: You have a\
+  \ solid understanding of at least one major cloud platform (AWS, GCP, or Azure)\
+  \ and common cloud services used in modern SaaS architectures\n\n\U0001F680 Startup\
+  \ Experience: You thrive in fast-paced, high-ownership startup environments and\
+  \ enjoy wearing multiple hats\n\n✈️ Travel-Ready: You’re open to occasional travel\
+  \ and onboarding sessions with the team in NYC / EMEA as needed\n\n\n\nNice-to-have\U0001F916\
+  \ AI & Automation Experience: Hands-on experience or strong familiarity with AI/LLM\
+  \ platforms, including concepts such as:\n\nLLMs, RAG (Retrieval-Augmented Generation),\
+  \ agents, and orchestration frameworks\n\nIntegrating AI capabilities into workflows\
+  \ or customer-facing solutions\n\nExposure to ML infrastructure or AI-enabled automation\
+  \ platforms\n\n\U0001F393 Advanced Technical Background: You hold a degree in Computer\
+  \ Science, Engineering, or a similar technical training\n\n\U0001F331 Community\
+  \ & Open Source Engagement: You are active in technical communities or have experience\
+  \ contributing to or working with open-source projects\n\n\U0001F6E0 Product Familiarity:\
+  \ Experience with n8n or similar workflow automation, integration, or iPaaS tools\n\
+  \n\U0001F4CA Data-Driven Mindset: You’re comfortable collecting, analyzing, and\
+  \ using data to improve pre-sales processes, POCs, and customer outcomes\n\nn8n\
+  \ is an equal opportunity employer and does not discriminate on the basis of race,\
+  \ religion, colour, national origin, gender, sexual orientation, gender identity,\
+  \ age, marital status, veteran status, or disability status.\n\nWe can sponsor visas\
+  \ to Germany; for any other country, you need to have existing right to work.\n\n\
+  Our company language is English.\n\nYou care about diversity and inclusion? We do\
+  \ too! Check out our Diversity, Inclusion and Belonging initiatives at n8n (https://www.notion.so/n8n/Diversity-inclusion-and-belonging-n8n-c1bec2fff536422d868b1a438d990e35).\n\
+  \nLocation disclaimer: If you see multiple job postings for the same role, it is\
+  \ most likely because we're hiring remotely for this role and posting in different\
+  \ locations to make sure every potential candidate can see the role. Please apply\
+  \ to the location you're the most likely to work from in the future. \n\n\n\nBenefits\
+  \ Competitive compensation \U0001F4B8 – We offer fair and attractive pay.\n\nOwnership\
+  \ \U0001F4AA – Our core value is to “empower others,” and we mean it—you’ll get\
+  \ a slice of n8n with equity.\n\nWork/life balance \U0001F3D6️ – We work hard but\
+  \ ensure you have time to recharge:\n\nEurope: 30 days of vacation, plus public\
+  \ holidays wherever you are.\n\nUS: 15 vacation days, 8 sick days, plus public holidays\
+  \ wherever you are.\n\nHealth & wellness \U0001FA7A –\n\nEurope: We provide benefits\
+  \ according to local country norms.*\n\nUS: Multiple low-premium, low-deductible\
+  \ medical plans with coverage for individuals and families—plus a no-cost premium\
+  \ HDHP option with a pre-seeded HSA—along with dental and vision coverage.\n\nFuture\
+  \ planning \U0001F4B0 –\n\nEurope: We provide pension contributions according to\
+  \ local country norms.*\n\nUS: 401(k) retirement plan with a 4% employer match.\n\
+  \nFinancial security \U0001F6E1️ –\n\nEurope: We provide benefits according to local\
+  \ country norms.*\n\nUS: Company-paid short-term and long-term disability insurance,\
+  \ plus life insurance to support you and your loved ones.\n\nCareer growth \U0001F4C8\
+  \ – We hire rising stars who grow with us! You’ll get €1K (or equivalent) per year\
+  \ to spend on courses, books, events, or coaching to level up your skills.\n\nA\
+  \ passionate team \U0001F929 – We love our product, and we prove it with regular\
+  \ hackathons where we see who can build the coolest thing with it!\n\nRemote-first\
+  \ \U0001F30F – Our team works remotely across Europe, with regular off-sites for\
+  \ team bonding. Some roles, like sales in the US, are hybrid—please check the job\
+  \ description.\n\nGiving back \U0001F91D – We're big fans of open source, and you'll\
+  \ get $100 per month to support projects you care about.\n\nAI enablement \U0001F916\
+  \ – We believe in working smarter—everyone gets an unlimited AI budget to explore\
+  \ and use the best tools to boost productivity and creativity.\n\nTransparency \U0001F64F\
+  \ – We all know what everyone’s working on, how the company is doing—the whole shebang.\n\
+  \nAn ambitious but kind culture \U0001F60D – People love working here—our eNPS for\
+  \ 2024 is 94!\n\n* Country-specific details are provided in your contract."
+source_url: https://jobs.ashbyhq.com/n8n/788662b7-6b2b-4b07-b466-bf131fd95d08?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+apply_url: https://jobs.ashbyhq.com/n8n/788662b7-6b2b-4b07-b466-bf131fd95d08?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+via: Jobs
+posted_at: 20 days ago
+schedule_type: Full-time
+salary_range: 250K–275K a year
+qualifications: []
+responsibilities: []
+benefits: []
+serpapi_job_id: eyJqb2JfdGl0bGUiOiJTZW5pb3IgU29sdXRpb25zIEVuZ2luZWVyIHwgRWFzdCBDb2FzdCAtIFJlbW90ZSIsImNvbXBhbnlfbmFtZSI6Im44biIsImh0aWRvY2lkIjoiclRvVXI4Sy12eGxHamhvWkFBQUFBQT09IiwiZmMiOiJFc3dCQ293QlFVMXVNeTE1VTBGMmRtaGlWR00yYzNSVk9XMVRUekJ6Y1RoTU1FbE5Ta2RmY0ZaaWNYVXhWWEY1UWxSYU1HeGZlRlZuYkZWUVNuWm9WbUZ6ZFc4ek5uSXlMVTF6WmtkVWRHWTNSRzVhUzBvd1ZYWmFjelIwZFZaQmEwaHhNR1pQVTNOd1FUQnJSMnBSZDNCZlVUUmtUV2xyU1ROeFpHaGhRMUJYUVU4d1JUUkVXVXQzU2kxc2QxbGpSRklTRjNsUlEyRmhaSFp4UjB3dGVtMTBhMUEyT0hGNGFVRmpHaUpCU2t0TVJtMUxTMUpyZWs5Zllrd3pRemcxYWxCb05ESk5PRWh3TUVKemFXMUIiLCJmY3YiOiIzIiwiZmNfaWQiOiJyVG9VcjhLLXZ4bEdqaG9aQUFBQUFBPT0ifQ==
+full_description_fetched: true
+fetch_error: null
+gemini_parsed: true

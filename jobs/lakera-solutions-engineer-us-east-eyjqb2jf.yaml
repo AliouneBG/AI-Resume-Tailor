@@ -1,0 +1,136 @@
+schema_version: '1'
+fetched_at: '2026-02-21T19:44:09.124992+00:00'
+title: Solutions Engineer (US East)
+company: Lakera
+location: New York, NY
+remote: false
+description: "Lakera is seeking a Solutions Engineer to accelerate sales velocity,\
+  \ increase customer success and shape the product experience as we scale. In this\
+  \ customer-facing role, you’ll be the primary technical point of contact through\
+  \ the sales process and a resource for customer success. You’ll translate customer\
+  \ needs into solutions, architecting with Lakera’s AI Defense Plane to help enterprises\
+  \ secure their AI stacks and unlock cutting-edge use cases.\n\nYou’ll work closely\
+  \ with Sales, Customer Success, Product, and Engineering to ensure Lakera delivers\
+  \ on its mission. With your blend of technical expertise, communication skills,\
+  \ and customer empathy, you’ll be at the forefront of AI security innovation.\n\n\
+  About Lakera\n\nLakera, a Check Point company, is on a mission to ensure AI does\
+  \ what we want it to do. We are heading towards a future where AI agents run our\
+  \ businesses and personal lives. Here at Lakera, we're not just dreaming about the\
+  \ future; we're building the security foundation for it. We empower security teams\
+  \ and builders so that their businesses can adopt AI technologies and unleash the\
+  \ next phase of intelligent computing.\n\nWe work with Fortune 500 companies, startups,\
+  \ and foundation model providers to protect them and their users from adversarial\
+  \ misalignment. We are also the company behind Gandalf, the world’s most popular\
+  \ AI security game.\n\nWe move fast and work with urgency. We act as one team but\
+  \ expect everyone to take substantial ownership and accountability. We prioritize\
+  \ transparency at every level and are committed to always raising the bar in everything\
+  \ we do. We promote diversity of thought as we believe that creates the best outcomes.\n\
+  \nWhat You’ll Do:\n\n\n\nAct as the primary technical point of contact for prospects\
+  \ evaluating Lakera. Understand their needs and design solutions that align with\
+  \ their infrastructure using Lakera’s platform. Partner with Customer Success to\
+  \ ensure customers onboard quickly and realize value from the platform. Develop\
+  \ and maintain technical documentation and guides to streamline pre-sales and guide\
+  \ post-sales workflows. Support product configuration and deliver minor technical\
+  \ changes required for prospect and customer implementations. Feed prospect feedback\
+  \ directly into Product and Engineering, helping shape the roadmap and ensuring\
+  \ the platform evolves with real-world needs. Lay the foundation for a scalable\
+  \ Solutions Engineering function by building playbooks and repeatable best practices.\
+  \ \n\nWhat You’ll Bring:\n\n5+ years of experience as a Solutions Engineer, Sales\
+  \ Engineer, Solutions Architect, or similar role. A track record of managing relationships\
+  \ with large, complex organizations, preferably with a deeply technical enterprise\
+  \ product. Proficiency coding in the Python and Javascript ecosystems. A track record\
+  \ of enabling large scale implementations in at least one of the hyperscalers (AWS,GCP,\
+  \ Azure). Preferred experience with Docker, Kubernetes, and Terraform. An understanding\
+  \ of and experience navigating security, compliance, and IT processes and requirements\
+  \ when implementing B2B products at large enterprises. Strong written and verbal\
+  \ communication and interpersonal skills with a comfort presenting in front of customers\
+  \ 1:1, in small groups, and at large conference venues.. A track record of working\
+  \ directly with customers of varying sizes, including large enterprises. An organized,\
+  \ self-starter approach with an eye for finding creative ways to get projects to\
+  \ the finish line. A passion for what AI can do for the good of humanity and a desire\
+  \ to ensure that it is implemented in a secure and ethical way. Comfortable in a\
+  \ small and fast moving startup environment. \n\nLocation: New York, Georgia, Virginia,\
+  \ or Floria.\n\nLogistics: Hybrid. We’re excited about candidates who want to contribute\
+  \ to our in-office culture.\n\nDeadline to apply: None. Applications will be reviewed\
+  \ on a rolling basis.\n\nCompensation and Benefits: Our total compensation package\
+  \ is a blend of salary, equity and benefits.\n\nWe are committed to paying fairly\
+  \ and aim for these three elements collectively to be highly competitive with market\
+  \ rates. Equity - On top of this position's compensation, equity will be a major\
+  \ component of the total compensation. We aim to offer higher-than-average equity\
+  \ compensation for a company of our size and communicate equity amounts at the time\
+  \ of offer issuance.\n\n\U0001F449 Let's stay connected! Follow us on LinkedIn,\
+  \ Twitter & Instagram to learn more about what is happening at Lakera.\n\nℹ️ Join\
+  \ us on Momentum, the slack community for AI Safety and Security everything.\n\n\
+  ❗To remove your information from our recruitment database, please email privacy@lakera.ai."
+description_source: serpapi
+serpapi_description: "Lakera is seeking a Solutions Engineer to accelerate sales velocity,\
+  \ increase customer success and shape the product experience as we scale. In this\
+  \ customer-facing role, you’ll be the primary technical point of contact through\
+  \ the sales process and a resource for customer success. You’ll translate customer\
+  \ needs into solutions, architecting with Lakera’s AI Defense Plane to help enterprises\
+  \ secure their AI stacks and unlock cutting-edge use cases.\n\nYou’ll work closely\
+  \ with Sales, Customer Success, Product, and Engineering to ensure Lakera delivers\
+  \ on its mission. With your blend of technical expertise, communication skills,\
+  \ and customer empathy, you’ll be at the forefront of AI security innovation.\n\n\
+  About Lakera\n\nLakera, a Check Point company, is on a mission to ensure AI does\
+  \ what we want it to do. We are heading towards a future where AI agents run our\
+  \ businesses and personal lives. Here at Lakera, we're not just dreaming about the\
+  \ future; we're building the security foundation for it. We empower security teams\
+  \ and builders so that their businesses can adopt AI technologies and unleash the\
+  \ next phase of intelligent computing.\n\nWe work with Fortune 500 companies, startups,\
+  \ and foundation model providers to protect them and their users from adversarial\
+  \ misalignment. We are also the company behind Gandalf, the world’s most popular\
+  \ AI security game.\n\nWe move fast and work with urgency. We act as one team but\
+  \ expect everyone to take substantial ownership and accountability. We prioritize\
+  \ transparency at every level and are committed to always raising the bar in everything\
+  \ we do. We promote diversity of thought as we believe that creates the best outcomes.\n\
+  \nWhat You’ll Do:\n\n\n\nAct as the primary technical point of contact for prospects\
+  \ evaluating Lakera. Understand their needs and design solutions that align with\
+  \ their infrastructure using Lakera’s platform. Partner with Customer Success to\
+  \ ensure customers onboard quickly and realize value from the platform. Develop\
+  \ and maintain technical documentation and guides to streamline pre-sales and guide\
+  \ post-sales workflows. Support product configuration and deliver minor technical\
+  \ changes required for prospect and customer implementations. Feed prospect feedback\
+  \ directly into Product and Engineering, helping shape the roadmap and ensuring\
+  \ the platform evolves with real-world needs. Lay the foundation for a scalable\
+  \ Solutions Engineering function by building playbooks and repeatable best practices.\
+  \ \n\nWhat You’ll Bring:\n\n5+ years of experience as a Solutions Engineer, Sales\
+  \ Engineer, Solutions Architect, or similar role. A track record of managing relationships\
+  \ with large, complex organizations, preferably with a deeply technical enterprise\
+  \ product. Proficiency coding in the Python and Javascript ecosystems. A track record\
+  \ of enabling large scale implementations in at least one of the hyperscalers (AWS,GCP,\
+  \ Azure). Preferred experience with Docker, Kubernetes, and Terraform. An understanding\
+  \ of and experience navigating security, compliance, and IT processes and requirements\
+  \ when implementing B2B products at large enterprises. Strong written and verbal\
+  \ communication and interpersonal skills with a comfort presenting in front of customers\
+  \ 1:1, in small groups, and at large conference venues.. A track record of working\
+  \ directly with customers of varying sizes, including large enterprises. An organized,\
+  \ self-starter approach with an eye for finding creative ways to get projects to\
+  \ the finish line. A passion for what AI can do for the good of humanity and a desire\
+  \ to ensure that it is implemented in a secure and ethical way. Comfortable in a\
+  \ small and fast moving startup environment. \n\nLocation: New York, Georgia, Virginia,\
+  \ or Floria.\n\nLogistics: Hybrid. We’re excited about candidates who want to contribute\
+  \ to our in-office culture.\n\nDeadline to apply: None. Applications will be reviewed\
+  \ on a rolling basis.\n\nCompensation and Benefits: Our total compensation package\
+  \ is a blend of salary, equity and benefits.\n\nWe are committed to paying fairly\
+  \ and aim for these three elements collectively to be highly competitive with market\
+  \ rates. Equity - On top of this position's compensation, equity will be a major\
+  \ component of the total compensation. We aim to offer higher-than-average equity\
+  \ compensation for a company of our size and communicate equity amounts at the time\
+  \ of offer issuance.\n\n\U0001F449 Let's stay connected! Follow us on LinkedIn,\
+  \ Twitter & Instagram to learn more about what is happening at Lakera.\n\nℹ️ Join\
+  \ us on Momentum, the slack community for AI Safety and Security everything.\n\n\
+  ❗To remove your information from our recruitment database, please email privacy@lakera.ai."
+source_url: https://www.linkedin.com/jobs/view/solutions-engineer-us-east-at-lakera-4371234372?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+apply_url: https://www.linkedin.com/jobs/view/solutions-engineer-us-east-at-lakera-4371234372?utm_campaign=google_jobs_apply&utm_source=google_jobs_apply&utm_medium=organic
+via: LinkedIn
+posted_at: 11 days ago
+schedule_type: Full-time
+salary_range: null
+qualifications: []
+responsibilities: []
+benefits: []
+serpapi_job_id: eyJqb2JfdGl0bGUiOiJTb2x1dGlvbnMgRW5naW5lZXIgKFVTIEVhc3QpIiwiY29tcGFueV9uYW1lIjoiTGFrZXJhIiwiaHRpZG9jaWQiOiJNSkcxYUx3RFI3cV9Xclp2QUFBQUFBPT0iLCJmYyI6IkVzd0JDb3dCUVUxdU15MTVVVTVzVVZjeVdtTnBUbEU0VWpnMU5raE5WbnBXVmxKU1gyMXJlVEI2UlU1NmJ6VnBkamx2T1RKQ1MxbERWVnB0V0RFd00yTjFlVk5OV2xnd1pteGpTVTVNVms5WFgyOVVRa0psV25kVlJHWjBiVzVvV0hvdFZERnFOa2hOVm01c2FqZFJha0pZTkdKc2ExWjVaQzFKYURscE5tdEtVazVNYjNjMGFYTjZaR3cyUmtOWlUxQVNGM2xSUTJGaFpIWnhSMHd0ZW0xMGExQTJPSEY0YVVGakdpSkJTa3RNUm0xS2JGazNkRGxEUkhob2JFeGhaa1V4WDFaVVNrSjFTazUwWVhaMyIsImZjdiI6IjMiLCJmY19pZCI6Ik1KRzFhTHdEUjdxX1dyWnZBQUFBQUE9PSJ9
+full_description_fetched: false
+fetch_error: gated:www.linkedin.com
+gemini_parsed: false

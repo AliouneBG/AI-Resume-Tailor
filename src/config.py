@@ -17,6 +17,12 @@ OPENAI_API_KEY: str = os.getenv("OPENAI_API_KEY", "")
 OPENAI_BASE_URL: str = os.getenv("OPENAI_BASE_URL", "https://api.openai.com/v1")
 MODEL_NAME: str = os.getenv("MODEL_NAME", "gpt-4o-mini")
 
+# ── Job search settings ──────────────────────────────────────
+SERPAPI_KEY: str = os.getenv("SERPAPI_KEY", "")
+GOOGLE_CLOUD_PROJECT: str = os.getenv("GOOGLE_CLOUD_PROJECT", "")
+GOOGLE_CLOUD_LOCATION: str = os.getenv("GOOGLE_CLOUD_LOCATION", "us-central1")
+GEMINI_MODEL: str = os.getenv("GEMINI_MODEL", "gemini-2.0-flash")
+
 # ── Paths ─────────────────────────────────────────────────────
 DATA_DIR = _PROJECT_ROOT / "data"
 MASTER_CV_PATH = DATA_DIR / "master_cv.json"
