@@ -104,4 +104,4 @@ python cli.py tailor --jd data/sample_jd.txt --output tailored_resume.md
 Distributed under the MIT License. See LICENSE for more information.
 
 ---
-*Maintained by AliouneBG*
+ 
