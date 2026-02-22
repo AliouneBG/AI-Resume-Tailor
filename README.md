@@ -1,101 +1,107 @@
-# 🎯 Resume Tailor — Self-Improving Agent
+# AI Resume Tailor
 
-A hackathon project that takes a raw **Job Description** and your **Master CV**, then produces a **tailored resume** through a self-improving agent pipeline.
+### *A persistent, self-improving AI agent that tailors resumes to job descriptions using an iterative critique loop and SQL-backed memory.*
+
+AI Resume Tailor is a stateful orchestration system that transforms raw job descriptions and a structured Master CV into tailored resumes through deterministic matching, iterative LLM refinement, and persistent memory retrieval. It enforces strict zero-hallucination guardrails and maintains long-term alignment through pattern extraction.
+
+---
+
+## Why This Project Is Non-Trivial
+
+- **Separation of Concerns**: Decouples deterministic relevance matching (Matcher) from generative LLM tasks (Writer) to maintain factual accuracy.
+- **Iterative Refinement**: Implements an autonomous feedback loop that persists until the output meets a specific score threshold or reaches the iteration limit.
+- **Auditability and Reproducibility**: Persists structured intermediate artifacts (JDProfile, SelectionPlan, MatchReport, Iterations) in SQL for full reproducibility and post-run inspection.
+- **Stateful Memory**: Successful runs (≥ threshold score) are distilled into critic summaries and stored as MemoryItems, which are retrieved and injected into subsequent prompts to accelerate convergence and improve alignment.
+- **Zero-Hallucination Constraints**: Enforces rigorous validation to ensure the LLM never invents experience outside the provided Master CV data.
+
+---
+
+## Key Features
+
+- **Integrated Job Search**: Search and ingest live job postings via SerpAPI integration.
+- **Multi-Agent Pipeline**: Dedicated agents for Job Description (JD) extraction, Resume writing, and Peer Review (Critic).
+- **Management Dashboard**: Streamlit-based interface for run history, memory inspection, and real-time pipeline monitoring.
+- **Persistent Record**: Full SQLite integration for tracking runs, scores, and historical performance.
+- **Smart Iteration**: Automatically triggers re-writes based on specific Critic feedback regarding keyword density and tone.
+
+---
+
+## System Design & Resilience
+
+The project is built with a focus on durability and architectural clarity:
+
+- **Persistence Model**: SQLAlchemy-backed storage supporting full relational integrity for Runs, Iterations, and MemoryItems.
+- **Run/Iteration Abstraction**: Tracks every execution at a granular level, including status, target/final scores, latency, and specific model metadata.
+- **Resilience Layer**:
+    - **Structured Domain Exceptions**: Custom hierarchy (APIError, DatabaseError, ValidationError) for precise error handling.
+    - **Backoff Strategy**: Exponential retry logic for transient API failures using the tenacity library.
+    - **Transaction Safety**: Context-managed database sessions ensuring atomicity and clean rollbacks.
+- **Memory Retrieval Flow**: Cross-session pattern recognition that weights prior successful critic summaries to guide the current writing task.
+
+---
+
+## Testing & Verification
+
+- **Unit Tests**: Full coverage for deterministic matching and scoring logic.
+- **Failure Scenario Tests**: Tests covering API rate limits, validation errors, and database disconnects.
+- **Explicit Verification Scripts**: Confirm persistence, state transitions, and memory retrieval behavior.
+
+---
 
 ## Architecture
 
-```
-JD text ──→ JD Extractor ──→ JDProfile (structured)
-                                │
-Master CV + JDProfile ──→ Matcher ──→ SelectionPlan
-                                        │
-JDProfile + Selection + CV ──→ Writer ──→ Resume v1
-                                            │
-JDProfile + CV + Resume v1 ──→ Critic ──→ MatchReport
-                                            │
-MatchReport + Resume v1 ──→ Writer ──→ Resume v2 (improved)
-```
+The system operates on an iterative feedback loop:
 
-| Component | Type | Description |
-|-----------|------|-------------|
-| **JD Extractor** | LLM Agent | Parses raw JD into structured requirements |
-| **Matcher** | Deterministic | Scores & selects best CV content (no LLM) |
-| **Resume Writer** | LLM Agent | Generates tailored Markdown resume |
-| **Critic** | LLM Agent | Audits for hallucinations, keyword coverage |
-| **Improver** | LLM Agent | Rewrites resume based on critic feedback |
+1.  **JD Extractor**: Parses raw job text into structured technical requirements and soft skills.
+2.  **Matcher**: A deterministic component that filters Master CV content for relevance without LLM overhead.
+3.  **Resume Writer**: Compiles a professional Markdown resume based on the structured selection.
+4.  **Critic (Auditor)**: Evaluates the resume against the JD, flagging keyword gaps and potential inaccuracies.
+5.  **Improver**: Refines the resume based on the Critic's specific feedback (up to 5 iterations).
 
-## Quick Start
+---
 
-### 1. Install dependencies
+## Installation & Setup
 
+### 1. Requirements
+- Python 3.9+
+- [Google AI Studio API Key](https://aistudio.google.com/) (for Gemini)
+- [SerpAPI Key](https://serpapi.com/) (optional, for job search)
+
+### 2. Setup
 ```bash
-cd resume-tailor-agent
-pip3 install -r requirements.txt
-```
+# Clone and enter the repo
+git clone https://github.com/AliouneBG/AI-Resume-Tailor.git
+cd AI-Resume-Tailor
 
-### 2. Configure your LLM
+# Install core dependencies
+pip install -r requirements.txt
 
-```bash
+# Configure environment
 cp .env.example .env
-# Edit .env with your API key and model choice
+# Update .env with your API keys
 ```
 
-Set `GEMINI_API_KEY` to your Google AI Studio API key. The default model is `gemini-2.5-flash`; override with `MODEL_NAME`.
+### 3. Source of Truth
+Populate `data/master_cv.json` with your verified work history. This file is the absolute boundary for the AI's content generation.
 
-### 3. Edit your Master CV
+---
 
-Update `data/master_cv.json` with your real experience, projects, and skills.
+## Operations
 
-### 4. Run the pipeline
-
+### Dashboard (Recommended)
 ```bash
-# Use the sample JD
-python3 cli.py tailor --jd data/sample_jd.txt
-
-# Or paste JD inline
-python3 cli.py tailor --jd "We are looking for a Python engineer..."
-
-# Save the final resume
-python3 cli.py tailor --jd data/sample_jd.txt --output resume_output.md
+streamlit run app.py
 ```
 
-## Run Tests
-
+### CLI Entrypoint
 ```bash
-pytest tests/ -v
+python cli.py tailor --jd data/sample_jd.txt --output tailored_resume.md
 ```
 
-## Project Structure
+---
 
-```
-resume-tailor-agent/
-├── cli.py                    # Typer CLI entry point
-├── requirements.txt
-├── .env.example
-├── data/
-│   ├── master_cv.json        # Your master CV
-│   └── sample_jd.txt         # Sample JD for testing
-├── src/
-│   ├── config.py             # Env vars, LLM client
-│   ├── models.py             # Pydantic data contracts
-│   ├── matcher.py            # Deterministic scorer
-│   ├── pipeline.py           # Orchestrator
-│   ├── agents/
-│   │   ├── jd_extractor.py   # JD → JDProfile
-│   │   ├── resume_writer.py  # Generate + improve resume
-│   │   └── critic.py         # Audit + score
-│   └── templates/
-│       └── resume.md.j2      # Markdown template
-└── tests/
-    ├── test_models.py
-    └── test_matcher.py
-```
+## License
+Distributed under the MIT License. See LICENSE for more information.
 
-## Data Contracts
-
-All components communicate via typed Pydantic models defined in `src/models.py`:
-
-- **`JDProfile`** — structured job requirements
-- **`SelectionPlan`** — which CV content to use and why
-- **`MatchReport`** — coverage score, missing keywords, hallucination flags
-- **`PipelineResult`** — all intermediate artifacts bundled together
+---
+*Maintained by AliouneBG*
