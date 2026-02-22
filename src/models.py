@@ -50,6 +50,22 @@ class MasterCV(BaseModel):
     projects: list[Project]
     education: list[Education]
 
+    def subset(self, xp_ids: list[str], proj_ids: list[str]) -> MasterCV:
+        """Return a copy of the CV with only the specified experiences and projects."""
+        return MasterCV(
+            name=self.name,
+            email=self.email,
+            phone=self.phone,
+            linkedin=self.linkedin,
+            github=self.github,
+            website=self.website,
+            summary=self.summary,
+            skills=self.skills,
+            experience=[e for e in self.experience if e.id in xp_ids],
+            projects=[p for p in self.projects if p.id in proj_ids],
+            education=self.education,
+        )
+
 
 # ── JD Profile ────────────────────────────────────────────────
 

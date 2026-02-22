@@ -32,16 +32,21 @@ app = typer.Typer(
 console = Console()
 
 
-def _on_iteration(iteration: Iteration) -> None:
+def _on_iteration(iteration: Iteration | None, status: str | None) -> None:
     """Live callback — prints each iteration as it completes."""
-    version = iteration.version
-    score = iteration.match_report.score
-    coverage = iteration.match_report.keyword_coverage
-    passed = "✅ PASSED" if iteration.passed else "🔄 needs improvement"
-    n_fixes = len(iteration.match_report.fixes)
-    n_risks = len(iteration.match_report.risk_flags)
+    if status:
+        # Use a simpler prefix for the CLI to keep it clean
+        console.print(f"  [dim]├─[/dim] {status}")
+    
+    if iteration:
+        version = iteration.version
+        score = iteration.match_report.score
+        coverage = iteration.match_report.keyword_coverage
+        passed = "✅ PASSED" if iteration.passed else "🔄 needs improvement"
+        n_fixes = len(iteration.match_report.fixes)
+        n_risks = len(iteration.match_report.risk_flags)
 
-    console.print(f"  [dim]├─[/dim] v{version}: score={score}/100  coverage={coverage:.0%}  fixes={n_fixes}  risks={n_risks}  {passed}")
+        console.print(f"  [dim]├─[/dim] v{version}: score={score}/100  coverage={coverage:.0%}  fixes={n_fixes}  risks={n_risks}  {passed}")
 
 
 @app.command()

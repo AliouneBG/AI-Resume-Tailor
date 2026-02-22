@@ -15,6 +15,21 @@ from src.database import SessionLocal, get_db, Run, Iteration as DBIteration, Me
 from src.exceptions import ResumeTailorError, ConfigError, APIError, DatabaseError, ValidationError
 from src import config
 
+# ── Caching Layer ──────────────────────────────────────────────
+@st.cache_resource
+def get_cached_llm_client():
+    return config.get_llm_client()
+
+@st.cache_data
+def cached_search_jobs(api_key, query, location, num_pages):
+    _console = Console(file=StringIO())
+    return search_jobs(api_key, query, location, num_pages, _console)
+
+@st.cache_data
+def cached_extract_jd(jd_text):
+    return run_pipeline(jd_text, max_iterations=0) # Simple extraction path if we split pipeline
+    # Actually, let's just stick to search for now as pipeline depends on CV state
+
 from rich.console import Console
 
 st.set_page_config(page_title="Resume Tailor", page_icon="🎯", layout="wide")
@@ -148,8 +163,7 @@ with jd_tab1:
         else:
             try:
                 with st.spinner("Searching jobs..."):
-                    _console = Console(file=StringIO())
-                    raw_jobs = search_jobs(config.SERPAPI_KEY, search_query, search_location.strip(), 1, _console)
+                    raw_jobs = cached_search_jobs(config.SERPAPI_KEY, search_query, search_location.strip(), 1)
                     st.session_state.search_results = [build_posting(raw, None, "no_fetch", None) for raw in raw_jobs]
                     st.session_state.expanded_job_idx = None
             except Exception as e:
@@ -375,9 +389,11 @@ if st.button("Tailor Resume", type="primary") or auto_run:
         status_text.empty()
         _running_banner.empty()
 
-    def on_iteration_callback(iteration: Iteration):
-        status_text.text(f"Iteration {iteration.version} completed: Score {iteration.match_report.score}/100")
-        progress_bar.progress(iteration.version / max_iterations)
+    def on_iteration_callback(iteration: Iteration | None, status: str | None):
+        if status:
+            status_text.text(status)
+        if iteration:
+            progress_bar.progress(iteration.version / max_iterations)
 
     with st.spinner("Executing Pipeline..."):
         try:

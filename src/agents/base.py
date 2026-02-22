@@ -9,6 +9,7 @@ from tenacity import (
     retry_if_exception_type,
 )
 from src.exceptions import APIError, ConfigError
+from src import config
 
 logger = logging.getLogger(__name__)
 
@@ -29,6 +30,13 @@ def retry_on_api_error(func):
         try:
             return func(*args, **kwargs)
         except Exception as e:
+            # Handle 429s by switching to fallback if primary is target_model
+            err_msg = str(e).lower()
+            if any(token in err_msg for token in ("rate limit", "429", "quota", "too many requests")):
+                if config.MODEL_NAME != config.get_model_name(is_fallback=True):
+                    logger.warning(f"Rate limit hit. Switching model to fallback: {config.get_model_name(is_fallback=True)}")
+                    config.MODEL_NAME = config.get_model_name(is_fallback=True)
+                raise APIError(f"Rate limit exceeded: {e}", status_code=429)
             # If it's already an APIError or ConfigError, re-raise to let tenacity decide
             if isinstance(e, (APIError, ConfigError)):
                 raise e

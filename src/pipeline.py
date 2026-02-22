@@ -65,7 +65,10 @@ def run_pipeline(
     max_iterations: int = DEFAULT_MAX_ITERATIONS,
     pass_threshold: float = DEFAULT_PASS_THRESHOLD,
     min_improvement: float = DEFAULT_MIN_IMPROVEMENT,
-    on_iteration: Callable[[Iteration], None] | None = None,
+    on_iteration: Callable[[Iteration | None, str | None], None] | None = None,
+    use_dynamic_iteration: bool = True,
+    use_pruned_context: bool = True,
+    use_rubric_optimization: bool = True,
 ) -> PipelineResult:
     """Run the full tailor pipeline with self-improvement feedback loop.
 
@@ -89,6 +92,9 @@ def run_pipeline(
     init_db()
     db = SessionLocal()
     run_id = None
+    iterations: list[Iteration] = []
+    jd_profile = None
+    selection_plan = None
 
     try:
         # ── Load CV ───────────────────────────────────────────────
@@ -99,6 +105,7 @@ def run_pipeline(
             raise CVValidationError(f"Failed to load Master CV from {cv_path}: {e}")
 
         # ── Step 1: Extract JD Profile ────────────────────────────
+        if on_iteration: on_iteration(None, "Extracting structured JD profile...")
         jd_profile = extract_jd_profile(jd_text)
         jd_hash = compute_jd_hash(jd_text)
 
@@ -125,6 +132,7 @@ def run_pipeline(
         run_id = run.id
 
         # ── Step 2: Match & Select ────────────────────────────────
+        if on_iteration: on_iteration(None, "Matching experiences and projects...")
         selection_plan = select_content(jd_profile, master_cv)
 
         # ── Step 2.5: Retrieve Memory Examples ────────────────────
@@ -137,7 +145,6 @@ def run_pipeline(
         (out_dir / "selection_plan.json").write_text(selection_plan.model_dump_json(indent=2))
 
         # ── Step 3: Self-Improvement Loop ─────────────────────────
-        iterations: list[Iteration] = []
         current_resume: str | None = None
         prev_score: float = 0.0
 
@@ -145,18 +152,29 @@ def run_pipeline(
             # Generate or improve
             if i == 1:
                 # First pass: generate from scratch + inject memory
-                current_resume = generate_resume(jd_profile, selection_plan, master_cv, memory_examples=memory_examples)
+                if on_iteration: on_iteration(None, f"Iteration {i}: Generating initial draft...")
+                current_resume = generate_resume(
+                    jd_profile, 
+                    selection_plan, 
+                    master_cv, 
+                    memory_examples=memory_examples,
+                    use_pruned_context=use_pruned_context,
+                    use_rubric_optimization=use_rubric_optimization
+                )
             else:
                 # Subsequent passes: improve based on critic feedback
+                if on_iteration: on_iteration(None, f"Iteration {i}: Refining based on critic feedback...")
                 prev_report = iterations[-1].match_report
                 current_resume = improve_resume(
                     jd_profile,
                     master_cv,
                     current_resume,  # type: ignore[arg-type]
                     prev_report.model_dump_json(indent=2),
+                    use_rubric_optimization=use_rubric_optimization
                 )
 
             # Critique the current version
+            if on_iteration: on_iteration(None, f"Iteration {i}: Performing quality audit...")
             report = critique_resume(jd_profile, master_cv, current_resume, iteration=i)
 
             # Check if this version passes
@@ -185,7 +203,7 @@ def run_pipeline(
             # Fire callback if provided
             if on_iteration:
                 try:
-                    on_iteration(iteration)
+                    on_iteration(iteration, f"Iteration {i} complete (Score: {report.score})")
                 except Exception as e:
                     logger.warning(f"on_iteration callback failed: {e}")
 
@@ -193,9 +211,18 @@ def run_pipeline(
             if passed:
                 break
 
-            if i > 1:
+            # DYNAMIC ITERATION POLICY:
+            # - Default max is 2 iterations.
+            # - Auto-extend up to 'max_iterations' ONLY IF score improved significantly and still below threshold.
+            if use_dynamic_iteration and i >= 2:
                 improvement = report.score - prev_score
-                if improvement < min_improvement:
+                # If we aren't improving enough, or if we hit an arbitrary max safety cap (e.g. 4)
+                if improvement < min_improvement or i >= 4:
+                    break
+                # Otherwise, if we improved by at least 3 points and still below 80, we keep going up to max_iterations
+                if i < max_iterations:
+                     logger.info(f"Iteration {i} improved by {improvement:.1f} pts. Extending run.")
+                else:
                     break
 
             prev_score = report.score
@@ -226,7 +253,7 @@ def run_pipeline(
             if db_run:
                 db_run.status = "FAILED_UNKNOWN"
                 db.commit()
-        raise RuntimeError(f"Pipeline failed on iteration {len(iterations) + 1}: {e}") from e
+        raise RuntimeError(f"Pipeline failed (Iterations completed: {len(iterations)}): {e}") from e
     finally:
         db.close()
 

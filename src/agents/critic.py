@@ -17,8 +17,8 @@ from __future__ import annotations
 import json
 
 from google.genai import types
-
-from src.config import MODEL_NAME, get_llm_client
+from src import config
+from src.config import get_llm_client
 from src.models import JDProfile, MasterCV, MatchReport
 from src.agents.base import retry_on_api_error
 from src.exceptions import APIError, ConfigError, ResponseParseError
@@ -166,7 +166,7 @@ def critique_resume(
         )
 
         response = client.models.generate_content(
-            model=MODEL_NAME,
+            model=config.get_model_name(),
             contents=user_msg,
             config=types.GenerateContentConfig(
                 system_instruction=_SYSTEM_PROMPT,

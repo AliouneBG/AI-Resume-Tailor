@@ -17,7 +17,8 @@ import json
 
 from google.genai import types
 
-from src.config import MODEL_NAME, get_llm_client
+from src import config
+from src.config import get_llm_client
 from src.models import JDProfile, MasterCV, SelectionPlan
 from src.agents.base import retry_on_api_error
 from src.exceptions import APIError, ConfigError, ResponseParseError
@@ -105,6 +106,14 @@ Write a 2–3 sentence summary that:
 - Ends with a value proposition tied to the JD's top responsibility
 - Uses JD keywords naturally
 
+## SELF-AUDIT CHECKLIST (BEFORE OUTPUTTING)
+Before you return the Markdown, perform this internal audit. If you fail any check, rewrite the section:
+1. **Zero Hallucination**: Is every single metric, technology, and company name present in the Master CV? (NO inventions permitted).
+2. **ATS Mirroring**: Did you use the JD's exact phrasing for Must-Have skills?
+3. **STAR Compliance**: Does every bullet have a specific Action and a measurable Result?
+4. **Human Tone**: Did you scrub "Leveraged", "Utilized", "Spearheaded", and "Innovative"? Does it sound like an engineer, not a bot?
+5. **No Placeholders**: Ensure there are no [Brackets] or placeholders in the final text.
+
 ## OUTPUT FORMAT — Markdown resume with these sections IN ORDER:
 
 # [Full Name]
@@ -153,6 +162,8 @@ def generate_resume(
     selection_plan: SelectionPlan,
     master_cv: MasterCV,
     memory_examples: list[str] | None = None,
+    use_pruned_context: bool = True,
+    use_rubric_optimization: bool = True,
 ) -> str:
     """Generate a tailored, STAR-method resume in Markdown.
 
@@ -169,13 +180,17 @@ def generate_resume(
         client = get_llm_client()
 
         # Build a focused user message with clear section headers
-        user_msg = _build_generation_prompt(jd_profile, selection_plan, master_cv, memory_examples)
+        user_msg = _build_generation_prompt(
+            jd_profile, selection_plan, master_cv, memory_examples, use_pruned_context
+        )
 
         response = client.models.generate_content(
-            model=MODEL_NAME,
+            model=config.get_model_name(),
             contents=user_msg,
             config=types.GenerateContentConfig(
-                system_instruction=_SYSTEM_PROMPT,
+                system_instruction=_SYSTEM_PROMPT
+                if use_rubric_optimization
+                else _SYSTEM_PROMPT.split("## SELF-AUDIT CHECKLIST")[0],
                 temperature=0.25,  # Low temp for consistency, slight creativity for phrasing
             ),
         )
@@ -185,7 +200,7 @@ def generate_resume(
         if len(resume_md) < 100:
             logger.warning(f"Generated resume seems too short: {len(resume_md)} chars")
             raise ResponseParseError("Generated resume is too short or empty.")
-        
+
         return resume_md
     except (ConfigError, ResponseParseError):
         raise
@@ -199,93 +214,75 @@ def _build_generation_prompt(
     selection_plan: SelectionPlan,
     master_cv: MasterCV,
     memory_examples: list[str] | None = None,
+    use_pruned_context: bool = True,
 ) -> str:
     """Build a structured prompt for resume generation."""
 
-    # Filter master CV to only selected items for cleaner context
-    selected_exp = [
-        exp for exp in master_cv.experience
-        if exp.id in selection_plan.selected_experience_ids
-    ]
-    selected_proj = [
-        proj for proj in master_cv.projects
-        if proj.id in selection_plan.selected_project_ids
-    ]
-
-    # Build the prompt with clear structure
     parts = [
         "Generate a tailored STAR-method resume for this candidate.\n",
     ]
 
     if memory_examples:
         parts.append("## HIGH-PERFORMING PATTERNS TO EMULATE")
-        parts.append("The following are feedback/patterns from previous successful runs. Use these to guide your style and keyword density:")
+        parts.append(
+            "The following are feedback/patterns from previous successful runs. Use these to guide your style and keyword density:"
+        )
         for i, example in enumerate(memory_examples, 1):
             parts.append(f"{i}. {example}")
         parts.append("")
 
-    parts.extend([
-        "## Target Role",
-        f"**Title:** {jd_profile.target_title}",
-        f"**Seniority:** {jd_profile.seniority or 'Not specified'}\n",
+    parts.extend(
+        [
+            "## Target Role",
+            f"**Title:** {jd_profile.target_title}",
+            f"**Seniority:** {jd_profile.seniority or 'Not specified'}\n",
+            "## Must-Have Skills (prioritize these)",
+            ", ".join(jd_profile.must_have_skills) + "\n",
+            "## Nice-to-Have Skills",
+            ", ".join(jd_profile.nice_to_have_skills) + "\n",
+            "## Key Responsibilities to Address",
+            "\n".join(f"- {r}" for r in jd_profile.responsibilities) + "\n",
+            "## ATS Keywords to Weave In",
+            ", ".join(jd_profile.keywords) + "\n",
+            "## Skills (ordered by relevance)",
+            ", ".join(selection_plan.skills_ordered) + "\n",
+            "## Candidate Info",
+            f"**Name:** {master_cv.name}",
+            f"**Email:** {master_cv.email}",
+            f"**Phone:** {master_cv.phone}" if master_cv.phone else "",
+            f"**LinkedIn:** {master_cv.linkedin}" if master_cv.linkedin else "",
+            f"**GitHub:** {master_cv.github}" if master_cv.github else "",
+            f"**Website:** {master_cv.website}" if master_cv.website else "",
+            "",
+        ]
+    )
 
-        "## Must-Have Skills (prioritize these)",
-        ", ".join(jd_profile.must_have_skills) + "\n",
+    # ── Master CV ─────────────────────────────────────────────
+    # CONTEXT PRUNING: Only send what was selected if optimization is on
+    if use_pruned_context:
+        cv_subset = master_cv.subset(
+            xp_ids=selection_plan.selected_experience_ids,
+            proj_ids=selection_plan.selected_project_ids,
+        )
+        parts.append("## Selected Candidate Master CV (JSON - GROUND TRUTH)")
+        parts.append(
+            "You MUST ONLY use information from this JSON for experiences, projects, and education. "
+            "Do NOT invent anything not present here."
+        )
+        parts.append(f"```json\n{cv_subset.model_dump_json(indent=2)}\n```\n")
+    else:
+        parts.append("## Candidate Master CV (JSON - GROUND TRUTH)")
+        parts.append(
+            "You MUST ONLY use information from this JSON for experiences, projects, and education. "
+            "Do NOT invent anything not present here."
+        )
+        parts.append(f"```json\n{master_cv.model_dump_json(indent=2)}\n```\n")
 
-        "## Nice-to-Have Skills",
-        ", ".join(jd_profile.nice_to_have_skills) + "\n",
-
-        "## Key Responsibilities to Address",
-        "\n".join(f"- {r}" for r in jd_profile.responsibilities) + "\n",
-
-        "## ATS Keywords to Weave In",
-        ", ".join(jd_profile.keywords) + "\n",
-
-        "## Skills (ordered by relevance)",
-        ", ".join(selection_plan.skills_ordered) + "\n",
-
-        "## Candidate Info",
-        f"**Name:** {master_cv.name}",
-        f"**Email:** {master_cv.email}",
-        f"**Phone:** {master_cv.phone}" if master_cv.phone else "",
-        f"**LinkedIn:** {master_cv.linkedin}" if master_cv.linkedin else "",
-        f"**GitHub:** {master_cv.github}" if master_cv.github else "",
-        f"**Website:** {master_cv.website}" if master_cv.website else "",
-        "",
-
-        "## Selected Experiences (use ONLY these, in this order)",
-    ])
-
-    for exp in selected_exp:
-        parts.append(f"\n### {exp.role} — {exp.company}")
-        parts.append(f"*{exp.start_date} – {exp.end_date}*")
-        parts.append(f"Technologies: {', '.join(exp.technologies)}")
-        parts.append("Original bullets (rewrite using STAR method):")
-        for bullet in exp.bullets:
-            parts.append(f"  - {bullet}")
-
-    parts.append("\n## Selected Projects (use ONLY these)")
-
-    for proj in selected_proj:
-        parts.append(f"\n### {proj.name}")
-        parts.append(f"Technologies: {', '.join(proj.technologies)}")
-        if proj.url:
-            parts.append(f"URL: {proj.url}")
-        parts.append("Original bullets (rewrite using STAR method):")
-        for bullet in proj.bullets:
-            parts.append(f"  - {bullet}")
-
-    parts.append("\n## Education")
-    for edu in master_cv.education:
-        parts.append(f"- {edu.degree} — {edu.institution} ({edu.graduation_date})")
-        if edu.gpa:
-            parts.append(f"  GPA: {edu.gpa}")
-        if edu.relevant_courses:
-            parts.append(f"  Courses: {', '.join(edu.relevant_courses)}")
-
-    parts.append(f"\n## Matching Context")
+    parts.append("\n## Matching Context")
     parts.append(f"Matched skills: {', '.join(selection_plan.reasoning.matched_skills)}")
-    parts.append(f"Missing skills (do NOT invent these): {', '.join(selection_plan.reasoning.missing_skills)}")
+    parts.append(
+        f"Missing skills (do NOT invent these): {', '.join(selection_plan.reasoning.missing_skills)}"
+    )
 
     return "\n".join(parts)
 
@@ -346,6 +343,7 @@ def improve_resume(
     master_cv: MasterCV,
     resume_md: str,
     match_report_json: str,
+    use_rubric_optimization: bool = True,
 ) -> str:
     """Improve a resume based on the critic's feedback using STAR method.
 
@@ -354,6 +352,7 @@ def improve_resume(
         master_cv: Complete candidate CV (ground truth for anti-hallucination).
         resume_md: The v1 resume Markdown to improve.
         match_report_json: JSON string of the critic's MatchReport.
+        use_rubric_optimization: If True, use the full system prompt with self-audit rubric.
 
     Returns:
         Improved v2 resume Markdown string.
@@ -367,14 +366,18 @@ def improve_resume(
             f"## Current Resume (v1)\n{resume_md}\n\n"
             f"## Critic's Match Report\n```json\n{match_report_json}\n```\n\n"
             f"## JD Profile (for keyword reference)\n```json\n{jd_profile.model_dump_json(indent=2)}\n```\n\n"
-            f"## Master CV (ground truth — do NOT add anything not here)\n```json\n{master_cv.model_dump_json(indent=2)}\n```"
+            f"## Source Data (Selected Context Only)\n"
+            "You MUST only use data from the previous v1 resume or the specific experiences mentioned in the selection plan. "
+            "Do NOT invent new roles.\n"
         )
 
         response = client.models.generate_content(
-            model=MODEL_NAME,
+            model=config.get_model_name(),
             contents=user_msg,
             config=types.GenerateContentConfig(
-                system_instruction=_IMPROVE_SYSTEM_PROMPT,
+                system_instruction=_IMPROVE_SYSTEM_PROMPT
+                if use_rubric_optimization
+                else _IMPROVE_SYSTEM_PROMPT.split("## IMPROVEMENT PRIORITIES")[0],
                 temperature=0.2,  # Even lower temp for precise edits
             ),
         )

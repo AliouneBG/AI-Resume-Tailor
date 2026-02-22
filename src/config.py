@@ -16,10 +16,25 @@ load_dotenv(_PROJECT_ROOT / ".env", override=False)
 # ── LLM settings ──────────────────────────────────────────────
 # We will read GEMINI_API_KEY dynamically inside get_llm_client
 # to allow runtime overrides (like from Streamlit).
-# You can use gemini-2.5-flash or gemini-2.0-flash, standard testing model
-_model_env = os.getenv("MODEL_NAME", "gemini-2.5-flash")
-# Reject non-Gemini model names (e.g. a stale MODEL_NAME=gpt-4o-mini in .env)
-MODEL_NAME: str = _model_env if _model_env.startswith("gemini") else "gemini-2.5-flash"
+# You can use gemini-2.0-flash for best balance of speed and quality
+_FALLBACK_MODEL = "gemini-flash-latest"
+
+def get_model_name(is_fallback: bool = False) -> str:
+    """Return the current model name, supporting a fallback choice."""
+    if is_fallback:
+        return _FALLBACK_MODEL
+    _primary = os.getenv("MODEL_NAME", "gemini-2.0-flash")
+    return _primary if _primary.startswith("gemini") else "gemini-2.0-flash"
+
+# Use a property or a dynamic helper for MODEL_NAME
+class _Config:
+    @property
+    def MODEL_NAME(self) -> str:
+        return get_model_name()
+
+# We'll stick to a function for now and update agents to use it if needed,
+# or just make get_model_name the source of truth.
+MODEL_NAME: str = get_model_name() # Initial value
 
 # ── Job search settings ──────────────────────────────────────
 SERPAPI_KEY: str = os.getenv("SERPAPI_KEY", "")

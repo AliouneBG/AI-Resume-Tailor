@@ -7,7 +7,8 @@ import logging
 
 from google.genai import types
 
-from src.config import MODEL_NAME, get_llm_client
+from src import config
+from src.config import get_llm_client
 from src.models import JDProfile
 from src.agents.base import retry_on_api_error
 from src.exceptions import APIError, ConfigError, ResponseParseError
@@ -118,12 +119,13 @@ def extract_jd_profile(jd_text: str) -> JDProfile:
         nonlocal last_error
         try:
             response = client.models.generate_content(
-                model=MODEL_NAME,
+                model=config.get_model_name(),
                 contents=f"Extract the JD profile from this job description:\n\n{jd_text}",
                 config=types.GenerateContentConfig(
                     system_instruction=system_prompt,
                     temperature=0.1,
                     response_mime_type="application/json",
+                    response_schema=JDProfile,
                 ),
             )
             raw = response.text
