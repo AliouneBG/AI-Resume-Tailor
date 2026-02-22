@@ -7,6 +7,7 @@ from pathlib import Path
 
 from dotenv import load_dotenv
 from google import genai
+from src.exceptions import ConfigError
 
 # Load .env from project root
 _PROJECT_ROOT = Path(__file__).resolve().parent.parent
@@ -32,21 +33,27 @@ MASTER_CV_PATH = DATA_DIR / "master_cv.json"
 TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 
 
-def get_llm_client() -> genai.Client:
-    """Return a configured Gemini client.
+# ── LLM Client Singleton ───────────────────────────────────────
+_CLIENT_CACHE: genai.Client | None = None
 
-    Auth priority:
-    1. GEMINI_API_KEY env var
-    2. Vertex AI with GCP Application Default Credentials (if GOOGLE_CLOUD_PROJECT is set)
-    3. ADC access token passed directly to the Gemini API
-    """
+def get_llm_client() -> genai.Client:
+    """Return a configured Gemini client (cached)."""
+    global _CLIENT_CACHE
+    if _CLIENT_CACHE:
+        return _CLIENT_CACHE
+
     api_key = os.environ.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
     if api_key:
-        return genai.Client(api_key=api_key)
+        _CLIENT_CACHE = genai.Client(api_key=api_key)
+        return _CLIENT_CACHE
 
     # Fall back to GCP Application Default Credentials
     if GOOGLE_CLOUD_PROJECT:
-        return genai.Client(vertexai=True, project=GOOGLE_CLOUD_PROJECT, location=GOOGLE_CLOUD_LOCATION)
+        try:
+            _CLIENT_CACHE = genai.Client(vertexai=True, project=GOOGLE_CLOUD_PROJECT, location=GOOGLE_CLOUD_LOCATION)
+            return _CLIENT_CACHE
+        except Exception as e:
+            raise ConfigError(f"Vertex AI initialization failed: {e}")
 
     try:
         import google.auth
@@ -55,9 +62,10 @@ def get_llm_client() -> genai.Client:
             scopes=["https://www.googleapis.com/auth/generative-language"]
         )
         credentials.refresh(google.auth.transport.requests.Request())
-        return genai.Client(api_key=credentials.token)
+        _CLIENT_CACHE = genai.Client(api_key=credentials.token)
+        return _CLIENT_CACHE
     except Exception as e:
-        raise RuntimeError(
+        raise ConfigError(
             "No Gemini authentication found. Tried in order:\n"
             "  1. GEMINI_API_KEY environment variable — not set\n"
             f"  2. Vertex AI via GOOGLE_CLOUD_PROJECT — not set\n"

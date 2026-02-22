@@ -9,6 +9,8 @@ from google.genai import types
 
 from src.config import MODEL_NAME, get_llm_client
 from src.models import JDProfile
+from src.agents.base import retry_on_api_error
+from src.exceptions import APIError, ConfigError, ResponseParseError
 
 _SYSTEM_PROMPT = """\
 You are a Job Description Analyst. Your ONLY job is to extract structured information
@@ -103,6 +105,7 @@ def _is_meaningful(profile: JDProfile) -> bool:
     return bool(profile.responsibilities or profile.must_have_skills or profile.keywords)
 
 
+@retry_on_api_error
 def extract_jd_profile(jd_text: str) -> JDProfile:
     """Call the LLM to extract a structured JDProfile from raw JD text.
 
@@ -127,6 +130,9 @@ def extract_jd_profile(jd_text: str) -> JDProfile:
             data = json.loads(raw)
             data = _post_process(data)
             return JDProfile(**data)
+        except ConfigError:
+            # Re-raise ConfigError immediately as it's a setup issue
+            raise
         except Exception as e:
             logger.warning("JD extraction attempt failed: %s", e)
             last_error = e

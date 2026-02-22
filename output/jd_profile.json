@@ -1,55 +1,16 @@
 {
-  "target_title": "Product-minded Generalist",
+  "target_title": "Senior Software Engineer",
   "must_have_skills": [
-    "Backend engineer",
-    "5 years professional experience",
-    "Go",
     "Java",
-    "Python",
-    "Shipped software using LLMs",
-    "Large Language Models experience",
-    "Large-scale systems experience",
-    "Data sets experience",
-    "Machine learning experience",
-    "Developer tools experience"
+    "AWS",
+    "Microservices"
   ],
   "nice_to_have_skills": [],
-  "responsibilities": [
-    "Work with users, designers, PMs, data",
-    "Work on LLM-based agents",
-    "Work on prompts, evals, agent tools",
-    "Productionize systems",
-    "Integrate with Datadog products",
-    "Prototype and iterate with users",
-    "Ship products",
-    "Follow latest LLM research",
-    "Work with other Datadog teams",
-    "Expand capabilities"
-  ],
+  "responsibilities": [],
   "keywords": [
-    "AI-assisted tools",
-    "LLM-based agents",
-    "LLM prompting",
-    "Evals",
-    "Agent tools",
-    "Code editing",
-    "Generative AI",
-    "Large Language Models",
-    "Large-scale systems",
-    "Machine learning",
-    "Datadog products",
-    "Datadog IDE extensions",
-    "CoPilot-like assistant",
-    "Dynamic Instrumentation",
-    "Go",
     "Java",
-    "Python",
-    "Backend engineering",
-    "Static code analysis",
-    "Compilers",
-    "SaaS",
-    "Cloud migration",
-    "Infrastructure monitoring"
+    "AWS",
+    "Microservices"
   ],
   "seniority": "senior"
 }

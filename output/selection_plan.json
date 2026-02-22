@@ -4,11 +4,13 @@
     "exp-2"
   ],
   "selected_project_ids": [
-    "proj-2",
-    "proj-3",
-    "proj-1"
+    "proj-1",
+    "proj-4",
+    "proj-2"
   ],
   "skills_ordered": [
+    "AWS",
+    "Microservices",
     "Python",
     "TypeScript",
     "JavaScript",
@@ -22,7 +24,6 @@
     "Redis",
     "Docker",
     "Kubernetes",
-    "AWS",
     "GCP",
     "Terraform",
     "CI/CD",
@@ -36,24 +37,15 @@
     "Pandas",
     "SQL",
     "Linux",
-    "Agile",
-    "Microservices"
+    "Agile"
   ],
   "reasoning": {
     "matched_skills": [
-      "Python"
+      "AWS",
+      "Microservices"
     ],
     "missing_skills": [
-      "5 years professional experience",
-      "Backend engineer",
-      "Data sets experience",
-      "Developer tools experience",
-      "Go",
-      "Java",
-      "Large Language Models experience",
-      "Large-scale systems experience",
-      "Machine learning experience",
-      "Shipped software using LLMs"
+      "Java"
     ]
   }
 }

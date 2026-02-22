@@ -27,19 +27,23 @@ The loop runs until:
   3. Score stopped improving (convergence) → returns current version
 """
 
-from __future__ import annotations
-
 import json
+import logging
+from datetime import datetime
 from pathlib import Path
 from typing import Callable
 
 from src.agents.critic import critique_resume
 from src.agents.jd_extractor import extract_jd_profile
 from src.agents.resume_writer import generate_resume, improve_resume
-from src.config import MASTER_CV_PATH
+from src.config import MODEL_NAME, MASTER_CV_PATH
 from src.matcher import select_content
 from src.models import Iteration, MasterCV, PipelineResult
+from src.database import Iteration as DBIteration, JobApplication, Run, SessionLocal, compute_jd_hash, init_db
+from src.memory import retrieve_examples, store_success
+from src.exceptions import ResumeTailorError, APIError, DatabaseError, JDValidationError, CVValidationError
 
+logger = logging.getLogger(__name__)
 
 # ── Default thresholds ────────────────────────────────────────
 DEFAULT_PASS_THRESHOLD = 80.0   # score out of 100 to consider "good enough"
@@ -77,33 +81,71 @@ def run_pipeline(
     Returns:
         PipelineResult with all iteration history.
     """
-    # ── Load CV ───────────────────────────────────────────────
-    if master_cv is None:
-        master_cv = load_master_cv(cv_path)
-
-    # ── Step 1: Extract JD Profile ────────────────────────────
-    jd_profile = extract_jd_profile(jd_text)
-
-    # ── Step 2: Match & Select ────────────────────────────────
-    selection_plan = select_content(jd_profile, master_cv)
-
-    # Write output files from Backbone (Step 1-2)
-    out_dir = Path("output")
-    out_dir.mkdir(exist_ok=True)
-    (out_dir / "jd_profile.json").write_text(jd_profile.model_dump_json(indent=2))
-    (out_dir / "selection_plan.json").write_text(selection_plan.model_dump_json(indent=2))
-
-    # ── Step 3: Self-Improvement Loop ─────────────────────────
-    iterations: list[Iteration] = []
-    current_resume: str | None = None
-    prev_score: float = 0.0
+    # ── Input Validation ──────────────────────────────────────
+    if not jd_text or not jd_text.strip():
+        raise JDValidationError("Job description text cannot be empty.")
+    
+    # ── Initialize Database ───────────────────────────────────
+    init_db()
+    db = SessionLocal()
+    run_id = None
 
     try:
+        # ── Load CV ───────────────────────────────────────────────
+        try:
+            if master_cv is None:
+                master_cv = load_master_cv(cv_path)
+        except Exception as e:
+            raise CVValidationError(f"Failed to load Master CV from {cv_path}: {e}")
+
+        # ── Step 1: Extract JD Profile ────────────────────────────
+        jd_profile = extract_jd_profile(jd_text)
+        jd_hash = compute_jd_hash(jd_text)
+
+        # ── Persistence: JobApplication & Run ─────────────────────
+        job_app = db.query(JobApplication).filter(JobApplication.jd_hash == jd_hash).first()
+        if not job_app:
+            job_app = JobApplication(
+                company="Unknown",  # To be updated if extracted
+                title=jd_profile.target_title,
+                jd_text=jd_text,
+                jd_hash=jd_hash
+            )
+            db.add(job_app)
+            db.flush()
+
+        run = Run(
+            job_application_id=job_app.id,
+            target_score=int(pass_threshold),
+            status="RUNNING",
+            model_name=MODEL_NAME
+        )
+        db.add(run)
+        db.commit()
+        run_id = run.id
+
+        # ── Step 2: Match & Select ────────────────────────────────
+        selection_plan = select_content(jd_profile, master_cv)
+
+        # ── Step 2.5: Retrieve Memory Examples ────────────────────
+        memory_examples = retrieve_examples(role_tag=jd_profile.target_title, jd_hash=jd_hash)
+
+        # Write output files from Backbone (Step 1-2)
+        out_dir = Path("output")
+        out_dir.mkdir(exist_ok=True)
+        (out_dir / "jd_profile.json").write_text(jd_profile.model_dump_json(indent=2))
+        (out_dir / "selection_plan.json").write_text(selection_plan.model_dump_json(indent=2))
+
+        # ── Step 3: Self-Improvement Loop ─────────────────────────
+        iterations: list[Iteration] = []
+        current_resume: str | None = None
+        prev_score: float = 0.0
+
         for i in range(1, max_iterations + 1):
             # Generate or improve
             if i == 1:
-                # First pass: generate from scratch
-                current_resume = generate_resume(jd_profile, selection_plan, master_cv)
+                # First pass: generate from scratch + inject memory
+                current_resume = generate_resume(jd_profile, selection_plan, master_cv, memory_examples=memory_examples)
             else:
                 # Subsequent passes: improve based on critic feedback
                 prev_report = iterations[-1].match_report
@@ -120,7 +162,7 @@ def run_pipeline(
             # Check if this version passes
             passed = report.score >= pass_threshold
 
-            # Record iteration
+            # Record iteration (Pydantic model)
             iteration = Iteration(
                 version=i,
                 resume_md=current_resume,
@@ -129,24 +171,64 @@ def run_pipeline(
             )
             iterations.append(iteration)
 
-            # Fire callback if provided (for live CLI/UI updates)
+            # Persistence: Save iteration (DB)
+            db_iteration = DBIteration(
+                run_id=run_id,
+                iteration_number=i,
+                score=int(report.score),
+                critic_feedback=report.model_dump_json(indent=2),
+                resume_markdown=current_resume
+            )
+            db.add(db_iteration)
+            db.commit()
+
+            # Fire callback if provided
             if on_iteration:
-                on_iteration(iteration)
+                try:
+                    on_iteration(iteration)
+                except Exception as e:
+                    logger.warning(f"on_iteration callback failed: {e}")
 
             # ── Exit conditions ───────────────────────────────────
             if passed:
-                # Score meets threshold — we're done!
                 break
 
             if i > 1:
                 improvement = report.score - prev_score
                 if improvement < min_improvement:
-                    # Score converged — further iterations won't help much
                     break
 
             prev_score = report.score
+
+        # ── Finalize Run ──────────────────────────────────────────
+        run = db.query(Run).filter(Run.id == run_id).first()
+        run.final_score = int(iterations[-1].match_report.score)
+        run.status = "SUCCESS"
+        run.finished_at = datetime.utcnow()
+        db.commit()
+
+        # ── Store Memory if Successful ──────────────────────────
+        if run.final_score >= pass_threshold:
+            store_success(run_id, threshold=int(pass_threshold))
+
+    except ResumeTailorError as e:
+        logger.error(f"Pipeline domain error: {e}")
+        if run_id:
+            db_run = db.query(Run).filter(Run.id == run_id).first()
+            if db_run:
+                db_run.status = f"FAILED_{type(e).__name__.upper()}"
+                db.commit()
+        raise
     except Exception as e:
+        logger.exception(f"Pipeline unexpected error: {e}")
+        if run_id:
+            db_run = db.query(Run).filter(Run.id == run_id).first()
+            if db_run:
+                db_run.status = "FAILED_UNKNOWN"
+                db.commit()
         raise RuntimeError(f"Pipeline failed on iteration {len(iterations) + 1}: {e}") from e
+    finally:
+        db.close()
 
     return PipelineResult(
         jd_profile=jd_profile,

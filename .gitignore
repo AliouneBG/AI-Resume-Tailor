@@ -29,3 +29,7 @@ Thumbs.db
 
 # SerpAPI cache
 .serpapi_cache/
+
+# Local database
+resume_tailor.db
+*.db

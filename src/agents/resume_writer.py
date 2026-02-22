@@ -19,6 +19,11 @@ from google.genai import types
 
 from src.config import MODEL_NAME, get_llm_client
 from src.models import JDProfile, MasterCV, SelectionPlan
+from src.agents.base import retry_on_api_error
+from src.exceptions import APIError, ConfigError, ResponseParseError
+import logging
+
+logger = logging.getLogger(__name__)
 
 
 # ── STAR Method Generation Prompt ─────────────────────────────
@@ -142,10 +147,12 @@ Write a 2–3 sentence summary that:
 """
 
 
+@retry_on_api_error
 def generate_resume(
     jd_profile: JDProfile,
     selection_plan: SelectionPlan,
     master_cv: MasterCV,
+    memory_examples: list[str] | None = None,
 ) -> str:
     """Generate a tailored, STAR-method resume in Markdown.
 
@@ -153,6 +160,7 @@ def generate_resume(
         jd_profile: Structured job requirements from JD Extractor.
         selection_plan: Ranked content selection from the Matcher.
         master_cv: Complete candidate CV (ground truth).
+        memory_examples: Optional high-performing patterns from past runs.
 
     Returns:
         ATS-optimized Markdown resume string.
@@ -161,7 +169,7 @@ def generate_resume(
         client = get_llm_client()
 
         # Build a focused user message with clear section headers
-        user_msg = _build_generation_prompt(jd_profile, selection_plan, master_cv)
+        user_msg = _build_generation_prompt(jd_profile, selection_plan, master_cv, memory_examples)
 
         response = client.models.generate_content(
             model=MODEL_NAME,
@@ -172,20 +180,25 @@ def generate_resume(
             ),
         )
 
-        resume = response.text.strip()
-
-        # Strip any accidental code fences the LLM might wrap the output in
-        resume = _strip_code_fences(resume)
-
-        return resume
+        # Cleanup and Validate
+        resume_md = _strip_code_fences(response.text)
+        if len(resume_md) < 100:
+            logger.warning(f"Generated resume seems too short: {len(resume_md)} chars")
+            raise ResponseParseError("Generated resume is too short or empty.")
+        
+        return resume_md
+    except (ConfigError, ResponseParseError):
+        raise
     except Exception as e:
-        raise RuntimeError(f"Resume generation failed: {e}") from e
+        logger.error(f"Resume generation attempt failed: {e}")
+        raise APIError(f"Resume generation failed. Last error: {e}")
 
 
 def _build_generation_prompt(
     jd_profile: JDProfile,
     selection_plan: SelectionPlan,
     master_cv: MasterCV,
+    memory_examples: list[str] | None = None,
 ) -> str:
     """Build a structured prompt for resume generation."""
 
@@ -202,7 +215,16 @@ def _build_generation_prompt(
     # Build the prompt with clear structure
     parts = [
         "Generate a tailored STAR-method resume for this candidate.\n",
+    ]
 
+    if memory_examples:
+        parts.append("## HIGH-PERFORMING PATTERNS TO EMULATE")
+        parts.append("The following are feedback/patterns from previous successful runs. Use these to guide your style and keyword density:")
+        for i, example in enumerate(memory_examples, 1):
+            parts.append(f"{i}. {example}")
+        parts.append("")
+
+    parts.extend([
         "## Target Role",
         f"**Title:** {jd_profile.target_title}",
         f"**Seniority:** {jd_profile.seniority or 'Not specified'}\n",
@@ -232,7 +254,7 @@ def _build_generation_prompt(
         "",
 
         "## Selected Experiences (use ONLY these, in this order)",
-    ]
+    ])
 
     for exp in selected_exp:
         parts.append(f"\n### {exp.role} — {exp.company}")
@@ -318,6 +340,7 @@ Return ONLY the improved Markdown resume. No commentary.
 """
 
 
+@retry_on_api_error
 def improve_resume(
     jd_profile: JDProfile,
     master_cv: MasterCV,
@@ -356,12 +379,19 @@ def improve_resume(
             ),
         )
 
-        resume = response.text.strip()
-        resume = _strip_code_fences(resume)
+        # Cleanup and Validate
+        resume_md = _strip_code_fences(response.text)
+        if len(resume_md) < 100:
+            logger.warning(f"Improved resume seems too short: {len(resume_md)} chars")
+            raise ResponseParseError("Improved resume is too short or empty.")
+        
+        return resume_md
 
-        return resume
+    except (ConfigError, ResponseParseError):
+        raise
     except Exception as e:
-        raise RuntimeError(f"Resume improvement failed: {e}") from e
+        logger.error(f"Resume improvement attempt failed: {e}")
+        raise APIError(f"Resume improvement failed. Last error: {e}")
 
 
 # ── Utilities ─────────────────────────────────────────────────

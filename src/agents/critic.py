@@ -20,6 +20,25 @@ from google.genai import types
 
 from src.config import MODEL_NAME, get_llm_client
 from src.models import JDProfile, MasterCV, MatchReport
+from src.agents.base import retry_on_api_error
+from src.exceptions import APIError, ConfigError, ResponseParseError
+import logging
+import json
+
+logger = logging.getLogger(__name__)
+
+def _strip_code_fences(text: str) -> str:
+    """Remove Markdown code fences if the LLM wraps its output in them."""
+    text = text.strip()
+    if text.startswith("```"):
+        # Remove starting fence
+        text = text.split("\n", 1)[-1]
+        # Remove ending fence
+        if text.endswith("```"):
+            text = text.rsplit("\n", 1)[0]
+            if text.endswith("```"): # handle case where ``` is on same line as content
+                 text = text[:-3]
+    return text.strip()
 
 _SYSTEM_PROMPT = """\
 You are a ruthless Resume Critic. You are the quality gate in a self-improving resume pipeline.
@@ -107,6 +126,7 @@ Return ONLY the JSON. No extra text.
 """
 
 
+@retry_on_api_error
 def critique_resume(
     jd_profile: JDProfile,
     master_cv: MasterCV,
@@ -155,8 +175,18 @@ def critique_resume(
             ),
         )
 
-        raw = response.text
-        data = json.loads(raw)  # type: ignore[arg-type]
-        return MatchReport(**data)
+        # Cleanup and Validate JSON
+        clean_json = _strip_code_fences(response.text)
+        try:
+            report_dict = json.loads(clean_json)
+            report = MatchReport(**report_dict)
+            return report
+        except (json.JSONDecodeError, Exception) as e:
+            logger.warning(f"Failed to parse Critic JSON: {e}. Raw: {clean_json}")
+            raise ResponseParseError(f"Critic returned invalid JSON: {e}")
+
+    except (ConfigError, ResponseParseError):
+        raise
     except Exception as e:
-        raise RuntimeError(f"Resume critique failed: {e}") from e
+        logger.error(f"Resume critique attempt failed: {e}")
+        raise APIError(f"Resume critique failed. Last error: {e}")
