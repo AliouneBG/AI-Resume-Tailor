@@ -3,10 +3,11 @@
 from __future__ import annotations
 
 import os
+import typing
 from pathlib import Path
 
 from dotenv import load_dotenv
-from google import genai
+# from google import genai (Moved inside get_llm_client for lazy loading)
 from src.exceptions import ConfigError
 
 # Load .env from project root
@@ -23,8 +24,8 @@ def get_model_name(is_fallback: bool = False) -> str:
     """Return the current model name, supporting a fallback choice."""
     if is_fallback:
         return _FALLBACK_MODEL
-    _primary = os.getenv("MODEL_NAME", "gemini-2.0-flash")
-    return _primary if _primary.startswith("gemini") else "gemini-2.0-flash"
+    _primary = os.getenv("MODEL_NAME", "gemini-pro-latest")
+    return _primary if _primary.startswith("gemini") else "gemini-pro-latest"
 
 # Use a property or a dynamic helper for MODEL_NAME
 class _Config:
@@ -49,13 +50,15 @@ TEMPLATES_DIR = Path(__file__).resolve().parent / "templates"
 
 
 # ── LLM Client Singleton ───────────────────────────────────────
-_CLIENT_CACHE: genai.Client | None = None
+_CLIENT_CACHE: typing.Any = None
 
-def get_llm_client() -> genai.Client:
+def get_llm_client() -> typing.Any:
     """Return a configured Gemini client (cached)."""
     global _CLIENT_CACHE
     if _CLIENT_CACHE:
         return _CLIENT_CACHE
+
+    from google import genai  # Lazy import for performance
 
     api_key = os.environ.get("GEMINI_API_KEY") or os.getenv("GEMINI_API_KEY")
     if api_key:

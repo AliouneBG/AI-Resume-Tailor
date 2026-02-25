@@ -26,6 +26,8 @@ from rich.console import Console
 from rich.progress import track
 
 from . import config
+from .config import get_llm_client
+from .agents.base import retry_on_api_error
 
 # ── Models ────────────────────────────────────────────────────
 
@@ -85,8 +87,7 @@ MAX_TEXT_CHARS = 80_000  # ~20k tokens
 
 
 class GeminiParser:
-    def __init__(self, project: str, location: str, model: str = "gemini-2.0-flash"):
-        self.client = genai.Client(vertexai=True, project=project, location=location)
+    def __init__(self, model: str = "gemini-2.0-flash"):
         self.model = model
         self._schema = GeminiParsedJob.model_json_schema()
 
@@ -98,7 +99,9 @@ class GeminiParser:
         lines = [line for line in text.splitlines() if line.strip()]
         return "\n".join(lines)[:MAX_TEXT_CHARS]
 
+    @retry_on_api_error
     def parse(self, html: str, job_title: str, company: str) -> Optional[GeminiParsedJob]:
+        client = get_llm_client()
         cleaned = self._clean_html(html)
         prompt = f"""You are extracting structured data from a job posting page.
 
@@ -116,19 +119,16 @@ Extract:
 
 Return JSON matching the schema exactly."""
 
-        try:
-            response = self.client.models.generate_content(
-                model=self.model,
-                contents=prompt,
-                config=types.GenerateContentConfig(
-                    response_mime_type="application/json",
-                    response_schema=self._schema,
-                    temperature=0.1,
-                ),
-            )
-            return GeminiParsedJob.model_validate_json(response.text)
-        except Exception:
-            return None
+        response = client.models.generate_content(
+            model=self.model,
+            contents=prompt,
+            config=types.GenerateContentConfig(
+                response_mime_type="application/json",
+                response_schema=self._schema,
+                temperature=0.1,
+            ),
+        )
+        return GeminiParsedJob.model_validate_json(response.text)
 
 
 # ── Constants ─────────────────────────────────────────────────
@@ -197,6 +197,10 @@ def fetch_page(url: str) -> tuple[str | None, str | None]:
 def search_jobs(api_key: str, query: str, location: str, max_pages: int, console: Console) -> list[dict]:
     """Search Google Jobs via SerpAPI with disk caching."""
     client = serpapi.Client(api_key=api_key)
+    if location and "remote" in location.lower():
+        query = f"{query} {location}"
+        location = ""
+
     params = {"engine": "google_jobs", "q": query}
     if location:
         params["location"] = location
@@ -326,7 +330,7 @@ def run_search(
         console.print("Set them in your .env file or shell environment.")
         sys.exit(1)
 
-    gemini = None if no_fetch else GeminiParser(gcp_project, gcp_location, gemini_model)
+    gemini = None if no_fetch else GeminiParser(gemini_model)
 
     try:
         output_dir.mkdir(parents=True, exist_ok=True)

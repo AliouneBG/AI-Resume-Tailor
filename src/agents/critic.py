@@ -27,18 +27,16 @@ import json
 
 logger = logging.getLogger(__name__)
 
+import re
+
 def _strip_code_fences(text: str) -> str:
-    """Remove Markdown code fences if the LLM wraps its output in them."""
+    """Robustly extract a JSON object from a string, ignoring conversational text and code fences."""
     text = text.strip()
-    if text.startswith("```"):
-        # Remove starting fence
-        text = text.split("\n", 1)[-1]
-        # Remove ending fence
-        if text.endswith("```"):
-            text = text.rsplit("\n", 1)[0]
-            if text.endswith("```"): # handle case where ``` is on same line as content
-                 text = text[:-3]
-    return text.strip()
+    # Try to find the first JSON object {}
+    match = re.search(r'\{[\s\S]*\}', text)
+    if match:
+        return match.group(0)
+    return text
 
 _SYSTEM_PROMPT = """\
 You are a ruthless Resume Critic. You are the quality gate in a self-improving resume pipeline.

@@ -38,10 +38,13 @@ from src.agents.jd_extractor import extract_jd_profile
 from src.agents.resume_writer import generate_resume, improve_resume
 from src.config import MODEL_NAME, MASTER_CV_PATH
 from src.matcher import select_content
-from src.models import Iteration, MasterCV, PipelineResult
+from src.models import Iteration, MasterCV, PipelineResult, JDProfile, SelectionPlan
 from src.database import Iteration as DBIteration, JobApplication, Run, SessionLocal, compute_jd_hash, init_db
 from src.memory import retrieve_examples, store_success
 from src.exceptions import ResumeTailorError, APIError, DatabaseError, JDValidationError, CVValidationError
+import threading
+
+# Global lock removed due to Streamlit thread management issues
 
 logger = logging.getLogger(__name__)
 
@@ -69,6 +72,7 @@ def run_pipeline(
     use_dynamic_iteration: bool = True,
     use_pruned_context: bool = True,
     use_rubric_optimization: bool = True,
+    demo_mode: bool = False,
 ) -> PipelineResult:
     """Run the full tailor pipeline with self-improvement feedback loop.
 
@@ -96,6 +100,21 @@ def run_pipeline(
     jd_profile = None
     selection_plan = None
 
+    jd_hash = compute_jd_hash(jd_text)
+    cache_path = Path("data/demo_cache.json")
+
+    # ── Demo Mode: Instant Replay ─────────────────────────────
+    if demo_mode:
+        if cache_path.exists():
+            try:
+                cache = json.loads(cache_path.read_text())
+                if jd_hash in cache:
+                    if on_iteration: on_iteration(None, "Demo Mode: Loading results from memory...")
+                    return PipelineResult.model_validate_json(cache[jd_hash])
+            except Exception as e:
+                logger.warning(f"Demo cache load failed: {e}")
+
+    lock_acquired = False
     try:
         # ── Load CV ───────────────────────────────────────────────
         try:
@@ -104,10 +123,24 @@ def run_pipeline(
         except Exception as e:
             raise CVValidationError(f"Failed to load Master CV from {cv_path}: {e}")
 
-        # ── Step 1: Extract JD Profile ────────────────────────────
-        if on_iteration: on_iteration(None, "Extracting structured JD profile...")
-        jd_profile = extract_jd_profile(jd_text)
-        jd_hash = compute_jd_hash(jd_text)
+        # ── Global Request Gate (Removed) ───────────────────────────
+        lock_acquired = True
+        
+        try:
+            # ── Step 1: Extract JD Profile (with caching) ─────────────
+            cache_dir = Path("data/cache/jd")
+            cache_dir.mkdir(parents=True, exist_ok=True)
+            cache_file = cache_dir / f"{jd_hash}.json"
+
+            if cache_file.exists():
+                if on_iteration: on_iteration(None, "Using cached JD profile...")
+                jd_profile = JDProfile.model_validate_json(cache_file.read_text())
+            else:
+                if on_iteration: on_iteration(None, "Extracting structured JD profile...")
+                jd_profile = extract_jd_profile(jd_text)
+                cache_file.write_text(jd_profile.model_dump_json(indent=2))
+        except Exception as e:
+            raise e
 
         # ── Persistence: JobApplication & Run ─────────────────────
         job_app = db.query(JobApplication).filter(JobApplication.jd_hash == jd_hash).first()
@@ -257,8 +290,22 @@ def run_pipeline(
     finally:
         db.close()
 
-    return PipelineResult(
+    result = PipelineResult(
         jd_profile=jd_profile,
         selection_plan=selection_plan,
         iterations=iterations,
     )
+
+    # ── Demo Mode: Save to Cache ──────────────────────────────
+    if iterations and iterations[-1].match_report.score >= pass_threshold:
+        try:
+            cache_path.parent.mkdir(parents=True, exist_ok=True)
+            cache = {}
+            if cache_path.exists():
+                cache = json.loads(cache_path.read_text())
+            cache[jd_hash] = result.model_dump_json()
+            cache_path.write_text(json.dumps(cache, indent=2))
+        except Exception as e:
+            logger.warning(f"Demo cache save failed: {e}")
+
+    return result

@@ -17,12 +17,12 @@ def retry_on_api_error(func):
     """Decorator to retry agent functions on transient API errors."""
     @wraps(func)
     @retry(
-        stop=stop_after_attempt(5),
-        wait=wait_exponential(multiplier=1, min=2, max=10),
+        stop=stop_after_attempt(3), # Reduced from 10 to fail faster on hard quota issues
+        wait=wait_exponential(multiplier=2, min=4, max=30),
         retry=retry_if_exception_type(APIError),
         before_sleep=lambda retry_state: logger.warning(
             f"Retrying {func.__name__} after error: {retry_state.outcome.exception()}. "
-            f"Attempt {retry_state.attempt_number}/5"
+            f"Attempt {retry_state.attempt_number}/3"
         ),
         reraise=True
     )
@@ -33,6 +33,11 @@ def retry_on_api_error(func):
             # Handle 429s by switching to fallback if primary is target_model
             err_msg = str(e).lower()
             if any(token in err_msg for token in ("rate limit", "429", "quota", "too many requests")):
+                # Check for hard quota exhaustion (limit: 0)
+                if "limit: 0" in err_msg or "quota exceeded" in err_msg:
+                    logger.error(f"HARD QUOTA EXHAUSTED: {e}")
+                    raise ConfigError(f"API Quota exhausted. Use Demo Mode or check billing: {e}")
+                
                 if config.MODEL_NAME != config.get_model_name(is_fallback=True):
                     logger.warning(f"Rate limit hit. Switching model to fallback: {config.get_model_name(is_fallback=True)}")
                     config.MODEL_NAME = config.get_model_name(is_fallback=True)
